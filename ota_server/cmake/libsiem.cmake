@@ -1,17 +1,14 @@
-# 添加第三方依赖包
-include(FetchContent)
-# FetchContent_MakeAvailable was not added until CMake 3.14
-if(${CMAKE_VERSION} VERSION_LESS 3.14)
-    include(add_FetchContent_MakeAvailable.cmake)
-endif()
+set(libsiem_path ${PROJECT_SOURCE_DIR}/github/Siempre)
 
-set(libsiem_GIT_BRANCH master)  # 指定分支
-set(libsiem_GIT_URL  https://github.com/nickyyy28/Siempre.git)  # 指定git仓库地址
+message("libsiem_path: ${libsiem_path}")
+message("build command:\n")
+message("[ -d build ] || mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/3rd_party && make && make install")
 
-FetchContent_Declare(
-  libsiem
-  GIT_REPOSITORY    ${libsiem_GIT_URL}
-  GIT_BRANCH           ${libsiem_GIT_BRANCH}
+add_custom_target(libsiem
+    COMMAND [ -d build ] || mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/3rd_party && make && make install
+    WORKING_DIRECTORY ${libsiem_path}
+    COMMENT "Building libsiem"
 )
 
-FetchContent_MakeAvailable(libsiem)
+include_directories(${PROJECT_SOURCE_DIR}/3rd_party/include)
+link_directories(${PROJECT_SOURCE_DIR}/3rd_party/lib)

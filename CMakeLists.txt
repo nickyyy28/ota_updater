@@ -21,6 +21,6 @@ set(libSiem_INSTALL_COMMAND "cd ${OTA_SERVER_ROOT_DIR}/github/${libSiem_Name}/bu
 #     BUILD_COMMAND ${libSiem_MAKE_COMMAND}
 #     INSTALL_COMMAND ${libSiem_INSTALL_COMMAND}
 # )
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(ota_server)
 
