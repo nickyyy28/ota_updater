@@ -1,0 +1,3 @@
+[submodule "ota_server/github/Siempre"]
+	path = ota_server/github/Siempre
+	url = https://github.com/nickyyy28/Siempre.git

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.11)
 project(ota_updater)
 
 # set external lib
@@ -11,16 +11,16 @@ set(libSiem_CONFIGURE_COMMAND "cd ${OTA_SERVER_ROOT_DIR}/github/${libSiem_Name} 
 set(libSiem_MAKE_COMMAND "cd ${OTA_SERVER_ROOT_DIR}/github/${libSiem_Name}/build && make")
 set(libSiem_INSTALL_COMMAND "cd ${OTA_SERVER_ROOT_DIR}/github/${libSiem_Name}/build && make install")
 
-include(ExternalProject)
+# include(ExternalProject)
 
-ExternalProject_Add(${libSiem_Name}
-    PREFIX ${OTA_SERVER_ROOT_DIR}/github/${libSiem_Name}
-    GIT_REPOSITORY ${libSiem_URL}
-    GIT_BRANCH ${libSiem_Branch}
-    CONFIGURE_COMMAND ${libSiem_CONFIGURE_COMMAND}
-    BUILD_COMMAND ${libSiem_MAKE_COMMAND}
-    INSTALL_COMMAND ${libSiem_INSTALL_COMMAND}
-)
+# ExternalProject_Add(${libSiem_Name}
+#     PREFIX ${OTA_SERVER_ROOT_DIR}/github/${libSiem_Name}
+#     GIT_REPOSITORY ${libSiem_URL}
+#     GIT_BRANCH ${libSiem_Branch}
+#     CONFIGURE_COMMAND ${libSiem_CONFIGURE_COMMAND}
+#     BUILD_COMMAND ${libSiem_MAKE_COMMAND}
+#     INSTALL_COMMAND ${libSiem_INSTALL_COMMAND}
+# )
 
 add_subdirectory(ota_server)
 

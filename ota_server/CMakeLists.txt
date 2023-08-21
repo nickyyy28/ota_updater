@@ -6,7 +6,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # set cpp level cpp11
 set(CMAKE_CXX_STANDARD 11)
 
-
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+include(libsiem)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
