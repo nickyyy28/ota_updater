@@ -5,6 +5,7 @@ set(SRC_LIST
 )
 
 add_executable(ota_server ${SRC_LIST})
+add_executable(test test.c)
 
 include_directories(${PROJECT_SOURCE_DIR}/3rd_party/include)
 include_directories(${PROJECT_SOURCE_DIR}/include)
