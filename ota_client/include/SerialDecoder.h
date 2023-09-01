@@ -6,10 +6,16 @@
 #include <QByteArray>
 #include <mutex>
 
+#include <atomic>
+#include "packet/Device2Client.h"
+
+#include <condition_variable>
+
 #include <memory>
 #include <qglobal.h>
 #include <qobject.h>
 #include <qserialport.h>
+#include <stdint.h>
 
 namespace ota_client {
 
@@ -25,7 +31,14 @@ public:
     bool open();
     void close();
 
+    int size();
+
     bool isOpen() const;
+
+    bool decodeOnce(DATA_HEAD& head, PacketBuffer& buffer);
+
+    void post();
+    void wait();
 
 private:
     /**
@@ -34,8 +47,25 @@ private:
      */
     void reset();
 
+    class Semaphore{
+    public:
+        Semaphore() : flag(false){}
+        ~Semaphore() = default;
+
+        void post();
+        void post_all();
+        void wait();
+    private:
+        std::mutex m_mtx;
+        std::condition_variable m_cond;
+        bool flag;
+    };
+
 private slots:
     void readData();
+
+public slots:
+    void testPost();
 
 private:
     QString m_portName;
@@ -44,6 +74,8 @@ private:
     QSerialPort *m_port;
     QByteArray m_recv;
     std::mutex m_mtx;
+
+    Semaphore m_sem;
 };
 
 }

@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <qobjectdefs.h>
+#include "DecodeThread.h"
 #include "SerialDecoder.h"
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +33,8 @@ private:
 
     QTimer *m_scanTimer;
     ota_client::SerialDecoder::ptr m_decoder;
+
+    ota_client::DecodeThread *m_decode_thread;
 
     bool m_serial_opened;
 };

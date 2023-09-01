@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// #pragma pack(1)
+
 struct FRAME_HEAD {
     uint8_t header1;		//0xAB
     uint8_t header2;		//0xCD
@@ -38,5 +44,16 @@ struct REPORT_CUR_FIRMWARE_INFO {       //0x010
     uint32_t size;              //固件大小 单位:Byte
     uint16_t crc16;             //固件整体CRC16
 }__attribute__((packed));
+
+union PacketBuffer{
+    MSG_REQ_FIRMWARE_INFO  msg_req_firmware_info;
+    REPORT_CUR_FIRMWARE_INFO report_cur_firmware_info;
+};
+
+#ifdef __cplusplus
+}
+#endif
+
+// #pragma pack()
 
 #endif //OTA_DEVICE_2_CLIENT_PACKET_H

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <qserialport.h>
 
 #include "packet/Device2Client.h"
 
@@ -8,14 +9,13 @@ namespace ota_client {
 
 class UpdateService{
 public:
-    using onReceiveControlMessageCallback = std::function<void(const FRAME_HEAD& frame_head)>;
-    using onReceiveDataMessageCallback = std::function<void(const FRAME_HEAD& frame_head)>;
-
     UpdateService() = default;
     ~UpdateService() = default;
 
+    void onReceiveControlMessage(const DATA_HEAD& data_head, void* data_body, QSerialPort* serial);
+    void onReceiveDataMessage(const DATA_HEAD& data_head, void* data_body, QSerialPort* serial);
 private:
-    
+
 };
 
 }

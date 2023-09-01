@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "DecodeThread.h"
 #include "SerialDecoder.h"
 #include <memory>
 #include <qcombobox.h>
@@ -74,6 +75,13 @@ MainWindow::MainWindow(QWidget *parent)
         ui->btn_open_serial->setText("打开串口");
         ui->btn_write_firmware->setEnabled(false);
     });
+
+    connect(ui->btn_read_firmware_info, &QPushButton::clicked, [this](){
+        m_decoder->testPost();
+    });
+
+    m_decode_thread = new ota_client::DecodeThread(this, m_decoder);
+    m_decode_thread->start();
 }
 
 MainWindow::~MainWindow()

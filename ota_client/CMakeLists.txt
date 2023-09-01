@@ -25,6 +25,8 @@ else()
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/public/include)
+message(${CMAKE_SOURCE_DIR}/public/include)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets SerialPort REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets SerialPort REQUIRED)
@@ -37,6 +39,7 @@ set(PROJECT_SOURCES
         src/SerialDecoder.cc
         src/DecodeThread.cc
         src/UpdateService.cc
+        ${CMAKE_SOURCE_DIR}/public/src/bsp_crc.c
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -73,3 +76,5 @@ set_target_properties(ota_client PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ota_client)
 endif()
+
+add_subdirectory(test)
