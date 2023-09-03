@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-// #pragma pack(1)
+#pragma pack(1)
 
 struct FRAME_HEAD {
     uint8_t header1;		//0xAB
@@ -54,6 +54,6 @@ union PacketBuffer{
 }
 #endif
 
-// #pragma pack()
+#pragma pack()
 
 #endif //OTA_DEVICE_2_CLIENT_PACKET_H
