@@ -16,21 +16,21 @@
 #include <stdint.h>
 #include <string.h>
 
-#define CLI_MAX_COMMAND_COUNT 			20		//×î¶àÖ§³Ö¶àÉÙÌõÖ¸Áî
-#define COMMAND_MAX_PARAM_COUNT			10		//Ã¿ÌõÖ¸Áî×î¶àÖ§³Ö¶àÉÙ²ÎÊı
-#define COMMAND_MAX_PARAM_KEY_SIZE		20		//²ÎÊıÃû³¤¶ÈÏŞÖÆ
-#define COMMAND_MAX_PARAM_VALUE_SIZE	20		//²ÎÊıÖµ³¤¶ÈÏŞÖÆ
+#define CLI_MAX_COMMAND_COUNT 			20		//æœ€å¤šæ”¯æŒå¤šå°‘æ¡æŒ‡ä»¤
+#define COMMAND_MAX_PARAM_COUNT			10		//æ¯æ¡æŒ‡ä»¤æœ€å¤šæ”¯æŒå¤šå°‘å‚æ•°
+#define COMMAND_MAX_PARAM_KEY_SIZE		20		//å‚æ•°åé•¿åº¦é™åˆ¶
+#define COMMAND_MAX_PARAM_VALUE_SIZE	20		//å‚æ•°å€¼é•¿åº¦é™åˆ¶
 
 //#define USE_CACHE
 
-#define RX_BUFFSIZE	128				//´®¿Ú»òUSBCDC½ÓÊÕ»º³åÇø´óĞ¡, µ«ÊÇUSBCDCÒ»°ãµ¥´ÎÊı¾İ°ü×î¶à64×Ö½Ú, ×¢ÒâÊ¹ÓÃ·½Ê½
+#define RX_BUFFSIZE	128				//ä¸²å£æˆ–USBCDCæ¥æ”¶ç¼“å†²åŒºå¤§å°, ä½†æ˜¯USBCDCä¸€èˆ¬å•æ¬¡æ•°æ®åŒ…æœ€å¤š64å­—èŠ‚, æ³¨æ„ä½¿ç”¨æ–¹å¼
 
-#define CURRSOR_BLINK		1		//¹â±êÊÇ·ñÉÁË¸
-#define CURRSOR_BLINK_FRQ	3		//ÉÁË¸ÆµÂÊ
-#define CONSOLE_COLOR_ENABLE 0 //
+#define CURRSOR_BLINK		1		//å…‰æ ‡æ˜¯å¦é—ªçƒ
+#define CURRSOR_BLINK_FRQ	3		//é—ªçƒé¢‘ç‡
+#define CONSOLE_COLOR_ENABLE 1 //
 #define CURRSOR_BLINK_TICK	(int)(1000 / CURRSOR_BLINK_FRQ * 2)
 
-/* ¼üÅÌ¿ØÖÆ×Ö·û */
+/* é”®ç›˜æ§åˆ¶å­—ç¬¦ */
 #define KEY_ENTER		0x0D
 #define KEY_TAB			0x09
 #define KEY_BACKSPACE	0x08
@@ -39,9 +39,9 @@
 #define KEY_LEFT_ARROW	0x1B5B44
 #define KEY_RIGHT_ARROW	0x1B5B43
 
-#define DELAY_TICK	5			//·¢ËÍºóµÄÑÓ³Ùº¯Êı, Èç¹ûÊ¹ÓÃ´®¿Ú´«Êä,¸Ã²ÎÊı¿ÉÒÔ²»¹Ü, Èç¹ûÊ¹ÓÃUSBCDC, ¸Ã²ÎÊı×ÃÇéÅäÖÃ,µ¥Î»ms
+#define DELAY_TICK	5			//å‘é€åçš„å»¶è¿Ÿå‡½æ•°, å¦‚æœä½¿ç”¨ä¸²å£ä¼ è¾“,è¯¥å‚æ•°å¯ä»¥ä¸ç®¡, å¦‚æœä½¿ç”¨USBCDC, è¯¥å‚æ•°é…Œæƒ…é…ç½®,å•ä½ms
 
-#define COLORFUL_LOG_INFO	1	//ÊÇ·ñÊ¹ÓÃ²ÊÉ«ÈÕÖ¾ĞÅÏ¢
+#define COLORFUL_LOG_INFO	1	//æ˜¯å¦ä½¿ç”¨å½©è‰²æ—¥å¿—ä¿¡æ¯
 #define CONSOLE_COLOR_BLACK  "\033[30m"
 #define CONSOLE_COLOR_RED  "\033[31m"
 #define CONSOLE_COLOR_GREEN  "\033[32m"
@@ -55,9 +55,9 @@
 
 #if CONSOLE_COLOR_ENABLE == 1
 
-//ÉèÖÃ¿ØÖÆÌ¨×ÖÌåÑÕÉ«
-#define SET_CONSOLE_COLOR(__color__) SHELL_Transmit(__color__, strlen(__color__))
-//»Ö¸´¿ØÖÆÌ¨×ÖÌåÑÕÉ«
+//è®¾ç½®æ§åˆ¶å°å­—ä½“é¢œè‰²
+#define SET_CONSOLE_COLOR(__color__) SHELL_Transmit((uint8_t*)__color__, strlen(__color__))
+//æ¢å¤æ§åˆ¶å°å­—ä½“é¢œè‰²
 #define RESUME_CONSOLE_COLOR() SET_CONSOLE_COLOR(CONSOLE_COLOR_WHITE)
 
 #else
@@ -67,188 +67,188 @@
 
 #endif
 
-//#define USE_USART	//Ê¹ÓÃ´®¿Ú
+//#define USE_USART	//ä½¿ç”¨ä¸²å£
 #define USE_USBCDC
 
 #define USBCDC_MAX_PACKET_SIZE 64
 
 #if defined USE_USBCDC
-//ÖÕ¶Ë·¢ËÍº¯Êı
+//ç»ˆç«¯å‘é€å‡½æ•°
 #define SHELL_Transmit(src, len)	\
 	CDC_Transmit_Packet(src, len)
 #elif defined USE_USART || defined USE_UART
 
-//ÖÕ¶ËÊ¹ÓÃµÄ´®¿Ú
+//ç»ˆç«¯ä½¿ç”¨çš„ä¸²å£
 #define SHELL_USART	huart1
 
 #define USART_IRQ_Handler USART1_IRQHandler
 
-//ÖÕ¶Ë·¢ËÍº¯Êı
+//ç»ˆç«¯å‘é€å‡½æ•°
 #define SHELL_Transmit(src, len)	HAL_UART_Transmit(&SHELL_USART, src, len, DELAY_TICK)
 
 #endif
 
 /**
- * @brief 	²ÎÊıÀàĞÍ
+ * @brief 	å‚æ•°ç±»å‹
  * 
  */
 typedef enum{
-	TYPE_NONE = 0,		//Î´ÖªÀàĞÍ
-	TYPE_BOOL,			//²¼¶ûÀàĞÍ
-	TYPE_CHAR,			//×Ö·ûÀàĞÍ
-	TYPE_SHORT,			//¶ÌÕûĞÍ
-	TYPE_INT,			//ÕûĞÍ
-	TYPE_LONG,			//³¤ÕûĞÍ
-	TYPE_INT64,			//64Î»ÕûĞÍ
-	TYPE_FLOAT,			//¸¡µãĞÍ
-	TYPE_DOUBLE,		//Ë«¾«¶È¸¡µãĞÍ
-	TYPE_UINT8HEX,		//8Î»ÎŞ·ûºÅÕûĞÍ, Ê®Áù½øÖÆ
-	TYPE_UINT16HEX,		//16Î»ÎŞ·ûºÅÕûĞÍ, Ê®Áù½øÖÆ
-	TYPE_UINT32HEX,		//32Î»ÎŞ·ûºÅÕûĞÍ, Ê®Áù½øÖÆ
-	TYPE_UINT64HEX,		//64Î»ÎŞ·ûºÅÕûĞÍ, Ê®Áù½øÖÆ
-	TYPE_STRING			//×Ö·û´®
+	TYPE_NONE = 0,		//æœªçŸ¥ç±»å‹
+	TYPE_BOOL,			//å¸ƒå°”ç±»å‹
+	TYPE_CHAR,			//å­—ç¬¦ç±»å‹
+	TYPE_SHORT,			//çŸ­æ•´å‹
+	TYPE_INT,			//æ•´å‹
+	TYPE_LONG,			//é•¿æ•´å‹
+	TYPE_INT64,			//64ä½æ•´å‹
+	TYPE_FLOAT,			//æµ®ç‚¹å‹
+	TYPE_DOUBLE,		//åŒç²¾åº¦æµ®ç‚¹å‹
+	TYPE_UINT8HEX,		//8ä½æ— ç¬¦å·æ•´å‹, åå…­è¿›åˆ¶
+	TYPE_UINT16HEX,		//16ä½æ— ç¬¦å·æ•´å‹, åå…­è¿›åˆ¶
+	TYPE_UINT32HEX,		//32ä½æ— ç¬¦å·æ•´å‹, åå…­è¿›åˆ¶
+	TYPE_UINT64HEX,		//64ä½æ— ç¬¦å·æ•´å‹, åå…­è¿›åˆ¶
+	TYPE_STRING			//å­—ç¬¦ä¸²
 }Param_Type;
 
 typedef enum{
-	COMMAND_NO_ERR,		//ÎŞ´íÎó
-	COMMAND_NOT_FOUND,	//Î´ÕÒµ½Ö¸Áî
-	PARAM_NOT_FOUND,	//Î´ÕÒµ½²ÎÊı
+	COMMAND_NO_ERR,		//æ— é”™è¯¯
+	COMMAND_NOT_FOUND,	//æœªæ‰¾åˆ°æŒ‡ä»¤
+	PARAM_NOT_FOUND,	//æœªæ‰¾åˆ°å‚æ•°
 }CLI_ERR_TYPE;
 
-//¿ØÖÆ°´¼üÖµ
+//æ§åˆ¶æŒ‰é”®å€¼
 typedef union{
 	uint32_t key_value;
 	uint8_t buff[4];
 }CONTROL_KEY_T;
 
-//²ÎÊı×´Ì¬
+//å‚æ•°çŠ¶æ€
 typedef enum{
-	NOT_CONFIGURED	= 0,	//Î´ÅäÖÃ
-	CONFIGURED				//ÒÑÅäÖÃ
+	NOT_CONFIGURED	= 0,	//æœªé…ç½®
+	CONFIGURED				//å·²é…ç½®
 }Param_Status;
 
-//²ÎÊı½á¹¹Ìå
+//å‚æ•°ç»“æ„ä½“
 typedef struct{
-	char key[COMMAND_MAX_PARAM_KEY_SIZE];		//²ÎÊıÃû
-	char value[COMMAND_MAX_PARAM_VALUE_SIZE];	//²ÎÊıÖµ
-	Param_Type type;							//²ÎÊıÀàĞÍ
-	Param_Status status;						//²ÎÊı×´Ì¬
+	char key[COMMAND_MAX_PARAM_KEY_SIZE];		//å‚æ•°å
+	char value[COMMAND_MAX_PARAM_VALUE_SIZE];	//å‚æ•°å€¼
+	Param_Type type;							//å‚æ•°ç±»å‹
+	Param_Status status;						//å‚æ•°çŠ¶æ€
 }Param_t;
 
-//ÃüÁî»º³åÇø
+//å‘½ä»¤ç¼“å†²åŒº
 typedef struct{
-	uint8_t buffer[256];						//ÃüÁî»º³åÇø
-	uint32_t size;								//»º³åÇø´óĞ¡
-	uint32_t insert_index;						//²åÈëË÷Òı
+	uint8_t buffer[256];						//å‘½ä»¤ç¼“å†²åŒº
+	uint32_t size;								//ç¼“å†²åŒºå¤§å°
+	uint32_t insert_index;						//æ’å…¥ç´¢å¼•
 }CMD_Buffer_t;
 
 struct Command_t;
 
-//ÃüÁî»Øµ÷º¯Êı
+//å‘½ä»¤å›è°ƒå‡½æ•°
 typedef void (*COMMAND_CALLBACK)(struct Command_t* cmd);
 
-//ÃüÁî½á¹¹Ìå
+//å‘½ä»¤ç»“æ„ä½“
 typedef struct Command_t{
-	const char* command;						//ÃüÁî
-	COMMAND_CALLBACK callback;					//»Øµ÷º¯Êı
-	Param_t params[COMMAND_MAX_PARAM_COUNT];	//²ÎÊı
-	uint32_t param_size;						//²ÎÊıÊıÁ¿
+	const char* command;						//å‘½ä»¤
+	COMMAND_CALLBACK callback;					//å›è°ƒå‡½æ•°
+	Param_t params[COMMAND_MAX_PARAM_COUNT];	//å‚æ•°
+	uint32_t param_size;						//å‚æ•°æ•°é‡
 }Command_t;
 
-//×¢²áÃüÁî½á¹¹Ìå
+//æ³¨å†Œå‘½ä»¤ç»“æ„ä½“
 typedef struct{
-	Command_t commands[CLI_MAX_COMMAND_COUNT];		//ÃüÁî
-	uint32_t size;									//ÃüÁîÊıÁ¿
+	Command_t commands[CLI_MAX_COMMAND_COUNT];		//å‘½ä»¤
+	uint32_t size;									//å‘½ä»¤æ•°é‡
 }Register_Commands_t;
 
 /**
- * @brief 	×¢²áÃüÁî
+ * @brief 	æ³¨å†Œå‘½ä»¤
  * 
- * @param cmd 			ÃüÁî
- * @param callback 		»Øµ÷º¯Êı
- * @return Command_t* 	ÃüÁî½á¹¹ÌåÖ¸Õë
+ * @param cmd 			å‘½ä»¤
+ * @param callback 		å›è°ƒå‡½æ•°
+ * @return Command_t* 	å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
  */
 Command_t* register_command(const char* cmd, COMMAND_CALLBACK callback);
 
 /**
- * @brief 	Ìí¼Ó²ÎÊı
+ * @brief 	æ·»åŠ å‚æ•°
  * 
- * @param cmd 			ÃüÁî½á¹¹ÌåÖ¸Õë
- * @param param_name  	²ÎÊıÃû
- * @param type  		²ÎÊıÀàĞÍ
- * @return Param_t*    	²ÎÊı½á¹¹ÌåÖ¸Õë
+ * @param cmd 			å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
+ * @param param_name  	å‚æ•°å
+ * @param type  		å‚æ•°ç±»å‹
+ * @return Param_t*    	å‚æ•°ç»“æ„ä½“æŒ‡é’ˆ
  */
 Param_t* command_add_param(Command_t *cmd, const char* param_name, Param_Type type);
 
 /**
- * @brief 	»ñÈ¡²ÎÊı
+ * @brief 	è·å–å‚æ•°
  * 
- * @param cmd 			ÃüÁî½á¹¹ÌåÖ¸Õë
- * @param param_name  	²ÎÊıÃû
- * @return Param_t*  	²ÎÊı½á¹¹ÌåÖ¸Õë
+ * @param cmd 			å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
+ * @param param_name  	å‚æ•°å
+ * @return Param_t*  	å‚æ•°ç»“æ„ä½“æŒ‡é’ˆ
  */
 Param_t* command_get_param(Command_t *cmd, const char* param_name);
 
 /**
- * @brief 	²ÎÊıÊÇ·ñÒÑÅäÖÃ
+ * @brief 	å‚æ•°æ˜¯å¦å·²é…ç½®
  * 
- * @param cmd  			ÃüÁî½á¹¹ÌåÖ¸Õë
- * @param param_name  	²ÎÊıÃû
- * @return uint8_t  	1:ÒÑÅäÖÃ 0:Î´ÅäÖÃ
+ * @param cmd  			å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
+ * @param param_name  	å‚æ•°å
+ * @return uint8_t  	1:å·²é…ç½® 0:æœªé…ç½®
  */
 uint8_t param_is_configured(Command_t *cmd, const char* param_name);
 
 /**
- * @brief 	»ñÈ¡²ÎÊıÖµ
+ * @brief 	è·å–å‚æ•°å€¼
  * 
- * @param cmd  			ÃüÁî½á¹¹ÌåÖ¸Õë
- * @param param_name  	²ÎÊıÃû
- * @param value  		²ÎÊıÖµ
+ * @param cmd  			å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
+ * @param param_name  	å‚æ•°å
+ * @param value  		å‚æ•°å€¼
  */
 void command_get_param_value(Command_t *cmd, const char* param_name, void *value);
 
 /**
- * @brief 	½âÂëÃüÁî
+ * @brief 	è§£ç å‘½ä»¤
  * 
- * @param src  			ÃüÁî×Ö·û´®
- * @param size  		ÃüÁî×Ö·û´®³¤¶È
- * @return Command_t*  	ÃüÁî½á¹¹ÌåÖ¸Õë
+ * @param src  			å‘½ä»¤å­—ç¬¦ä¸²
+ * @param size  		å‘½ä»¤å­—ç¬¦ä¸²é•¿åº¦
+ * @return Command_t*  	å‘½ä»¤ç»“æ„ä½“æŒ‡é’ˆ
  */
 Command_t* decode_command(uint8_t *src, uint32_t size);
 
 /**
- * @brief  shell³õÊ¼»¯
+ * @brief  shellåˆå§‹åŒ–
  * 
  */
 void shell_init(void);
 
 /**
- * @brief 	shell½øÈëÑ­»·
+ * @brief 	shellè¿›å…¥å¾ªç¯
  * 
  */
 void shell_exec(void);
 
 /**
- * @brief 	shell·¢ËÍÈÕÖ¾
+ * @brief 	shellå‘é€æ—¥å¿—
  * 
- * @param fmt  ÈÕÖ¾¸ñÊ½
- * @param ...  ¿É±ä²ÎÊı
+ * @param fmt  æ—¥å¿—æ ¼å¼
+ * @param ...  å¯å˜å‚æ•°
  */
 void SHELL_LOG(const char* fmt, ...);
 
 /**
- * @brief 	shell·¢ËÍµ÷ÊÔĞÅÏ¢
+ * @brief 	shellå‘é€è°ƒè¯•ä¿¡æ¯
  * 
- * @param fmt  µ÷ÊÔĞÅÏ¢¸ñÊ½
- * @param ...  ¿É±ä²ÎÊı
+ * @param fmt  è°ƒè¯•ä¿¡æ¯æ ¼å¼
+ * @param ...  å¯å˜å‚æ•°
  */
 void SHELL_DEBUG(const char* fmt, ...);
 
 /**
- * @brief 	shell·¢ËÍÊı¾İ
+ * @brief 	shellå‘é€æ•°æ®
  * 
- * @param fmt 	Êı¾İ¸ñÊ½
- * @param ...  	¿É±ä²ÎÊı
+ * @param fmt 	æ•°æ®æ ¼å¼
+ * @param ...  	å¯å˜å‚æ•°
  */
 void SHELL_PRINTF(const char* fmt, ...);
 

@@ -35,22 +35,103 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "ff_gen_drv.h"
-
+#include "w25qxx_4M.h"
+#include "uni_shell.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-
+#define PAGE_SIZE       256
+#define SECTOR_SIZE     4096
+#define SECTOR_COUNT	2048
+#define BLOCK_SIZE		65536
+#define BLOCK_COUNT		128
+#define FLASH_PAGES_PER_SECTOR	SECTOR_SIZE/PAGE_SIZE
 /* Private variables ---------------------------------------------------------*/
 /* Disk status */
 FATFS fs;
-FIL file;						  	/* �ļ����� */
-FRESULT f_res;                    	/* �ļ�������� */
-UINT fnum;            				/* �ļ��ɹ���д���� */
-BYTE ReadBuffer[1024]={0};        	/* �������� */
+FIL file;						  	/* 文件对象 */
+FRESULT f_res;                    	/* 文件操作结果 */
+UINT fnum;            				/* 文件成功读写数量 */
+BYTE ReadBuffer[1024]={0};        	/* 读缓冲区 */
 BYTE WriteBuffer[]= "WWB is the high hand\n";
 BYTE work[4096];
+UINT bw;
 char USER_Path[4];
 
 static volatile DSTATUS Stat = STA_NOINIT;
+
+void FileTest(void)
+{
+    FRESULT res;  /* API result code */
+	BYTE mm[50];
+	UINT i;
+	SHELL_DEBUG("文件系统测试开始.");
+	/* 挂载文件系统 */
+	res = f_mount(&fs, "0:", 0);
+	if (res)
+	{
+		SHELL_DEBUG("文件系统挂载失败.");
+	}
+	else
+	{
+		SHELL_DEBUG("文件系统挂载成功.");
+	}
+	/* Create a file as new */
+	/*res = f_open(&file, "0:/test.txt", FA_CREATE_NEW|FA_WRITE|FA_READ);
+	if (res)
+	{
+		SHELL_DEBUG("打开文件失败.");
+	}
+	else
+	{
+		SHELL_DEBUG("打开文件成功.");
+	}
+	res = f_write(&file, "Hello,World!", 12, &bw);
+	//uart_printf("res write:%d\r\n",res);
+	if (bw == 12)
+	{
+		SHELL_DEBUG("写文件成功!");
+	}
+	else
+	{
+		SHELL_DEBUG("写文件失败!");
+	}
+	res = f_size(&file);
+	SHELL_DEBUG("文件大小:%d Bytes.",res);
+	memset(mm,0x0,50);
+	
+	//f_lseek(&file,0);
+	res = f_close(&file);
+	if (res) {
+		SHELL_DEBUG("文件保存失败.");
+	} else {
+		SHELL_DEBUG("文件保存成功.");
+	}*/
+	
+	res = f_open(&file, "0:/test.txt", FA_READ);
+	if (res) {
+		SHELL_DEBUG("打开文件失败.");
+		return;
+	} else {
+		SHELL_DEBUG("打开文件成功.");
+	}
+	res = f_read(&file,mm,12,&i);
+	if (res == FR_OK)
+	{
+		SHELL_DEBUG("读文件成功!");
+		SHELL_DEBUG("读到数据长度:%d Bytes.",i);
+	}
+	else
+	{
+		SHELL_DEBUG("读文件失败!");
+	}
+	SHELL_DEBUG("读到如下数据:%s", mm);
+	//buff_print((char *)mm,12);
+	/* Close the file */
+	f_close(&file);
+	/*卸载文件系统*/
+	f_mount(0, "0:", 0);
+	SHELL_DEBUG("文件系统测试完毕.");
+} 
 
 /* USER CODE END DECL */
 
@@ -90,8 +171,15 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
-    Stat = STA_NOINIT;
-    return Stat;
+    //Stat = W25Qx_Init();
+    // Stat = STA_NOINIT;
+	Stat = STA_NOINIT;
+	if((W25qxx_ReadID() & 0x000000FF) != 0)
+	{
+		//Stat &= ~STA_NOINIT;
+		return RES_OK;
+	}	
+    return RES_OK;
   /* USER CODE END INIT */
 }
 
@@ -105,8 +193,8 @@ DSTATUS USER_status (
 )
 {
   /* USER CODE BEGIN STATUS */
-    Stat = STA_NOINIT;
-    return Stat;
+    Stat &= ~STA_NOINIT;
+    return RES_OK;
   /* USER CODE END STATUS */
 }
 
@@ -126,7 +214,27 @@ DRESULT USER_read (
 )
 {
   /* USER CODE BEGIN READ */
-    return RES_OK;
+  /*SHELL_DEBUG("FLASH READ sector addr: %d, count: %d", sector, count);
+    for (uint32_t i = 0 ; i < count ; i++ ) {
+      SHELL_DEBUG("current count: %d", i);
+      SHELL_DEBUG("W25Qx read addr %d, size: %d", sector * W25Qx_Para.SUBSECTOR_SIZE, W25Qx_Para.SUBSECTOR_SIZE);
+      W25Qx_Read(buff, sector * W25Qx_Para.SUBSECTOR_SIZE, W25Qx_Para.SUBSECTOR_SIZE);
+			SHELL_DEBUG("aaa");
+      buff += W25Qx_Para.SUBSECTOR_SIZE; 
+      sector ++;
+      
+    }
+		SHELL_DEBUG("READ Complete");
+    return RES_OK;*/
+	DRESULT res = RES_ERROR;
+	UINT i;
+  
+	for(i = 0;i < count;i++)
+	{
+		//sFLASH_ReadBuffer(buff + i * 4096,sector * 4096 + i * 4096,4096 );
+		SHELL_DEBUG("W25qxx_ReadSector");
+		W25qxx_ReadSector(buff + i * 4096, sector + i, 0, 4096);
+	}
   /* USER CODE END READ */
 }
 
@@ -147,8 +255,30 @@ DRESULT USER_write (
 )
 {
   /* USER CODE BEGIN WRITE */
+	/*DRESULT ret;
+  for (uint32_t i = 0 ; i < count ; i++ ) {
+    W25Qx_Erase_Block(sector * W25Qx_Para.SUBSECTOR_SIZE);
+    ret |= W25Qx_Write(buff, sector * W25Qx_Para.SUBSECTOR_SIZE, W25Qx_Para.SUBSECTOR_SIZE);
+    buff += W25Qx_Para.SUBSECTOR_SIZE;
+    sector ++;
+  }*/
   /* USER CODE HERE */
-    return RES_OK;
+	DRESULT res = RES_ERROR;
+	
+	UINT i;
+	
+	//SHELL_DEBUG("flash write sector count = %d", count);
+  
+	for(i = 0;i < count;i++)
+	{
+		//SHELL_DEBUG("writing sector:%d", sector + i);
+		W25qxx_EraseSector(sector + i);
+		W25qxx_WriteSector((uint8_t *)(buff + SECTOR_SIZE * i), sector + i, 0, SECTOR_SIZE);
+	}
+	
+	
+	res = RES_OK;
+    return res;
   /* USER CODE END WRITE */
 }
 #endif /* _USE_WRITE == 1 */

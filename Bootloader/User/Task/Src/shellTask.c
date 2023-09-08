@@ -5,7 +5,6 @@
 #include "uni_shell.h"
 #include "usb_device.h"
 #include <string.h>
-#include "w25qxx.h"
 #include "usart.h"
 
 extern void FileTest(void);
@@ -90,7 +89,7 @@ void cmd_spiflash(Command_t *cmd)
 		command_get_param_value(cmd, "value", &value);
 		W25qxx_WriteByte(value, addr);
 	} else {
-		SHELL_LOG("ÄãÐ´µÄÊ²Ã´¹´°ËÖ¸Áî,ÕýÈ·ÓÃ·¨:");
+		SHELL_LOG("ä½ å†™çš„ä»€ä¹ˆå‹¾å…«æŒ‡ä»¤,æ­£ç¡®ç”¨æ³•:");
 		SHELL_LOG("spiflash -read -addr 0x00000000");
 		SHELL_LOG("spiflash -write -addr 0x00000000 -value 0x20");
 	}
@@ -113,9 +112,13 @@ void cmd_spi(Command_t *cmd)
 
 }
 
+#include "w25qxx_driver.h"
+
 void cmd_filetest(Command_t *cmd)
 {
 	//FileTest();
+	W25Qxx_ReadID(NULL);
+	W25qxx_Init();
 }
 
 void shell_task(void* param)

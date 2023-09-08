@@ -60,8 +60,10 @@
 "bootloader\usbd_ioreq.o"
 "bootloader\usbd_cdc.o"
 "bootloader\uni_shell.o"
-"bootloader\w25qxx.o"
+"bootloader\w25qxx_4m.o"
 "bootloader\shelltask.o"
+"bootloader\boot.o"
+"bootloader\w25qxx_driver.o"
 --strict --scatter "Bootloader\Bootloader.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

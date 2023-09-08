@@ -570,7 +570,7 @@ void SHELL_LOG(const char* fmt, ...)
     
     va_end(args);
 	SET_CONSOLE_COLOR(CONSOLE_COLOR_GREEN);
-	SHELL_Transmit(log_buffer, strlen(log_buffer));
+	SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
 	RESUME_CONSOLE_COLOR();
 }
 
@@ -596,7 +596,7 @@ void SHELL_DEBUG(const char* fmt, ...)
     
     va_end(args);
 	SET_CONSOLE_COLOR(CONSOLE_COLOR_BLUE);
-	SHELL_Transmit(log_buffer, strlen(log_buffer));
+	SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
 	RESUME_CONSOLE_COLOR();
 }
 
@@ -611,7 +611,7 @@ void SHELL_PRINTF(const char* fmt, ...)
 
 	va_end(args);
 
-	SHELL_Transmit(print_buffer, strlen(print_buffer));
+	SHELL_Transmit((uint8_t*)print_buffer, strlen(print_buffer));
 }
 
 #if defined USE_USART || USB_UART
@@ -643,7 +643,6 @@ void CDC_RECEIVE(uint8_t* src, uint32_t len)
 #if defined USE_USBCDC
 void CDC_Transmit_Packet(uint8_t *src, uint32_t len)
 {
-	static uint8_t buffer[USBCDC_MAX_PACKET_SIZE] = {0};
 	for (int i = 0 ; i < len ; i += USBCDC_MAX_PACKET_SIZE ) {
 		if (len - i >= USBCDC_MAX_PACKET_SIZE) {
 			CDC_Transmit_FS(src + i, USBCDC_MAX_PACKET_SIZE);

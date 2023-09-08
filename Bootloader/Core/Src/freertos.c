@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "shellTask.h"
+#include "uni_shell.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +49,7 @@
 osThreadId_t shellTaskHandle;
 const osThreadAttr_t shellTask_attributes = {
   .name = "shellTask",
-  .stack_size = 128 * 4,
+  .stack_size = 128 * 16,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE END Variables */
@@ -126,7 +127,9 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+		uint64_t stack_use = uxTaskGetStackHighWaterMark(shellTaskHandle);
+		//SHELL_DEBUG("Stack Usage: %lu Byte", stack_use * 4);
+    osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
 }
