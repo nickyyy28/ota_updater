@@ -11,6 +11,9 @@ __attribute__((section(".RW_IRAM2"))) __attribute__((aligned(32)))  uint8_t usar
 __attribute__((aligned(32))) uint8_t usart_rx_buffer[RX_BUFFSIZE] = {0};
 #endif
 
+const static char log_level_str[][8] = {"DEBUG", "INFO", "WARNING", "ERROR", "FATAL"};
+const static char log_level_color[][8] = {CONSOLE_COLOR_BLUE, CONSOLE_COLOR_GREEN, CONSOLE_COLOR_YELLOW, CONSOLE_COLOR_RED, CONSOLE_COLOR_PURPLE};
+
 Register_Commands_t cli_commands = {0};
 CMD_Buffer_t cmd_buffer = {0};
 CMD_Buffer_t last_cmd_buffer = {0};
@@ -270,12 +273,12 @@ err:
 	switch (err_type) {
 		case COMMAND_NOT_FOUND: {
 			sprintf(err_buff, "\r\nCommand: %s not found...", tmp_cmd);
-			SHELL_Transmit(err_buff, strlen(err_buff));
+			SHELL_Transmit((uint8_t *)err_buff, strlen(err_buff));
 			break;
 		}
 		case PARAM_NOT_FOUND: {
 			sprintf(err_buff, "\r\nParam: %s not found...", key);
-			SHELL_Transmit(err_buff, strlen(err_buff));
+			SHELL_Transmit((uint8_t *)err_buff, strlen(err_buff));
 			break;
 		}
 		case COMMAND_NO_ERR:
@@ -338,7 +341,7 @@ void cmd_buffer_add_byte(uint8_t ch)
 void shell_exec(void)
 {
 	SHELL_DELAY(1000);
-	SHELL_Transmit("\r\n>", 3);
+	SHELL_Transmit((uint8_t *)"\r\n>", 3);
 	while(1) {
 		if (rx_flag) {
 			//HAL_NVIC_DisableIRQ(USART1_IRQn);
@@ -350,9 +353,9 @@ void shell_exec(void)
 				switch (control_key.key_value) {
 					case KEY_UP_ARROW:
 						for (int i = 0 ; i < cmd_buffer.insert_index ; i++) {
-							SHELL_Transmit("\033[D", 5);
+							SHELL_Transmit((uint8_t *)"\033[D", 5);
 						}
-						SHELL_Transmit("\033[K", 5);
+						SHELL_Transmit((uint8_t *)"\033[K", 5);
 						//memcpy(&cmd_buffer, &last_cmd_buffer, sizeof(cmd_buffer));
 						//SHELL_Transmit(cmd_buffer.buffer, cmd_buffer.size);
 						//SHELL_DELAY(1);
@@ -360,13 +363,13 @@ void shell_exec(void)
 					case KEY_LEFT_ARROW:
 						if (cmd_buffer.insert_index > 1) {
 							cmd_buffer.insert_index--;
-							SHELL_Transmit("\033[D", 5);
+							SHELL_Transmit((uint8_t *)"\033[D", 5);
 						}
 						break;
 					case KEY_RIGHT_ARROW:
 						if (cmd_buffer.insert_index < cmd_buffer.size) {
 							cmd_buffer.insert_index++;
-							SHELL_Transmit("\033[C", 5);
+							SHELL_Transmit((uint8_t *)"\033[C", 5);
 						}
 						break;
 					default:
@@ -392,9 +395,9 @@ void shell_exec(void)
 							}
 							memcpy(&last_cmd_buffer, &cmd_buffer, sizeof(cmd_buffer));
 							cmd_buffer_clear();
-							SHELL_Transmit("\r\n>", 3);
+							SHELL_Transmit((uint8_t *)"\r\n>", 3);
 						} else {
-							SHELL_Transmit("\r\n>", 3);
+							SHELL_Transmit((uint8_t *)"\r\n>", 3);
 						}
 						break;
 					case KEY_TAB: {
@@ -426,16 +429,16 @@ void shell_exec(void)
 								cmd_buffer_clear();
 								strcpy((char*)cmd_buffer.buffer, cmds[0]->command);
 								cmd_buffer.size = cmd_buffer.insert_index = strlen(cmds[0]->command);
-								SHELL_Transmit("\r\n>", 3);
+								SHELL_Transmit((uint8_t *)"\r\n>", 3);
 								SHELL_Transmit(cmd_buffer.buffer, cmd_buffer.size);
 							} else if (cmd_count > 1) {
-								SHELL_Transmit("\r\n", 2);
+								SHELL_Transmit((uint8_t *)"\r\n", 2);
 								for (int i = 0 ; i < cmd_count ; i++) {
 									char cmd_buff[20] = {0};
 									sprintf(cmd_buff, "%s  ", cmds[i]->command);
-									SHELL_Transmit(cmd_buff, strlen(cmd_buff));
+									SHELL_Transmit((uint8_t *)cmd_buff, strlen(cmd_buff));
 								}
-								SHELL_Transmit("\r\n>", 3);
+								SHELL_Transmit((uint8_t *)"\r\n>", 3);
 								SHELL_Transmit(cmd_buffer.buffer, cmd_buffer.size);
 							}
 						}
@@ -444,8 +447,8 @@ void shell_exec(void)
 					case KEY_BACKSPACE:
 						if (cmd_buffer.insert_index > 0) {
 							cmd_buffer_remove_byte();
-							SHELL_Transmit("\033[D", 5);
-							SHELL_Transmit("\033[P", 5);
+							SHELL_Transmit((uint8_t *)"\033[D", 5);
+							SHELL_Transmit((uint8_t *)"\033[P", 5);
 						}
 						break;
 					default:
@@ -453,7 +456,7 @@ void shell_exec(void)
 						SHELL_Transmit(&cmd_buffer.buffer[cmd_buffer.insert_index - 1], cmd_buffer.size - cmd_buffer.insert_index + 1);
 						int left_move = cmd_buffer.size - cmd_buffer.insert_index;
 						for (int i = 0 ; i < left_move ; i++) {
-							SHELL_Transmit("\033[D", 5);
+							SHELL_Transmit((uint8_t *)"\033[D", 5);
 						}
 						break;
 				}
@@ -467,9 +470,9 @@ void shell_exec(void)
 			free_ticks++;
 			free_ticks %= CURRSOR_BLINK_TICK;
 			if (free_ticks == 0) {
-				SHELL_Transmit("\033[?25l", 8);
+				SHELL_Transmit((uint8_t *)"\033[?25l", 8);
 			} else if (free_ticks == CURRSOR_BLINK_TICK / 2) {
-				SHELL_Transmit("\033[?25h", 8);
+				SHELL_Transmit((uint8_t *)"\033[?25h", 8);
 			} else {
 				SHELL_DELAY(1);
 			}
@@ -505,19 +508,19 @@ void cmd_buffer_remove_byte(void)
 
 void cmd_clear(Command_t *cmd)
 {
-	SHELL_Transmit("\033[0;0H", 8);
+	SHELL_Transmit((uint8_t *)"\033[0;0H", 8);
 	SHELL_DELAY(DELAY_TICK);
-	SHELL_Transmit("\033[2J", 6);
+	SHELL_Transmit((uint8_t *)"\033[2J", 6);
 	SHELL_DELAY(DELAY_TICK);
 }
 
 void cmd_logo(Command_t *cmd)
 {
-	SHELL_Transmit("\r\n   __  __      _ _____ __         ____", 41);
-	SHELL_Transmit("\r\n  / / / /___  (_) ___// /_  ___  / / /", 41);
-	SHELL_Transmit("\r\n / / / / __ \\/ /\\__ \\/ __ \\/ _ \\/ / /", 40);
-	SHELL_Transmit("\r\n/ /_/ / / / / /___/ / / / /  __/ / /", 39);
-	SHELL_Transmit("\r\n\\____/_/ /_/_//____/_/ /_/\\___/_/_/\r\n", 40);
+	SHELL_Transmit((uint8_t *)"\r\n   __  __      _ _____ __         ____", 41);
+	SHELL_Transmit((uint8_t *)"\r\n  / / / /___  (_) ___// /_  ___  / / /", 41);
+	SHELL_Transmit((uint8_t *)"\r\n / / / / __ \\/ /\\__ \\/ __ \\/ _ \\/ / /", 40);
+	SHELL_Transmit((uint8_t *)"\r\n/ /_/ / / / / /___/ / / / /  __/ / /", 39);
+	SHELL_Transmit((uint8_t *)"\r\n\\____/_/ /_/_//____/_/ /_/\\___/_/_/\r\n", 40);
 }
 
 void cmd_reboot(Command_t *cmd)
@@ -548,54 +551,27 @@ void shell_init(void)
 	register_command("reboot", cmd_reboot);
 }
 
-void SHELL_LOG(const char* fmt, ...)
+void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...)
 {
-	static char log_buffer[150] = {0}, raw_buffer[128] = {0};
-	// memset(raw_buffer, 0, 128);
-	// memset(log_buffer, 0, 150);
+	static char log_buffer[250] = {0}, raw_buffer[200] = {0};
 	
 	va_list args;
     va_start(args, fmt);
+	
+	const char *level_str = log_level_str[level - 1];
     
     vsprintf(raw_buffer, fmt, args);
 	uint32_t cur_tick = HAL_GetTick();
 	uint32_t hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
-	//milliseconds = cur_tick % 1000;
 	hours = cur_tick / (1000 * 60 * 60);
 	cur_tick %= (1000 * 60 * 60);
 	minutes = cur_tick / (1000 * 60);
 	cur_tick %= (1000 * 60);
 	seconds = cur_tick / 1000;
-	sprintf(log_buffer, "\r\n[%02u:%02u:%02u]: %s", hours, minutes, seconds, raw_buffer);
+	sprintf(log_buffer, "\r\n[%02u:%02u:%02u][%s]: %s", hours, minutes, seconds, level_str, raw_buffer);
     
     va_end(args);
-	SET_CONSOLE_COLOR(CONSOLE_COLOR_GREEN);
-	SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
-	RESUME_CONSOLE_COLOR();
-}
-
-void SHELL_DEBUG(const char* fmt, ...)
-{
-	static char log_buffer[300] = {0}, raw_buffer[200] = {0};
-	//memset(raw_buffer, 0, 300);
-	//memset(log_buffer, 0, 200);
-	
-	va_list args;
-    va_start(args, fmt);
-    
-    vsprintf(raw_buffer, fmt, args);
-	uint32_t cur_tick = HAL_GetTick();
-	uint32_t hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
-	//milliseconds = cur_tick % 1000;
-	hours = cur_tick / (1000 * 60 * 60);
-	cur_tick %= (1000 * 60 * 60);
-	minutes = cur_tick / (1000 * 60);
-	cur_tick %= (1000 * 60);
-	seconds = cur_tick / 1000;
-	sprintf(log_buffer, "\r\n[%02u:%02u:%02u]: %s", hours, minutes, seconds, raw_buffer);
-    
-    va_end(args);
-	SET_CONSOLE_COLOR(CONSOLE_COLOR_BLUE);
+	SET_CONSOLE_COLOR(log_level_color[level - 1]);
 	SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
 	RESUME_CONSOLE_COLOR();
 }

@@ -323,6 +323,9 @@
             "files": [
               {
                 "path": "../User/Service/Src/uni_shell.c"
+              },
+              {
+                "path": "../User/Service/Src/w25qxx_4M.c"
               }
             ],
             "folders": []

@@ -6,6 +6,9 @@
 #include "usb_device.h"
 #include <string.h>
 #include "usart.h"
+#include "w25qxx_driver.h"
+
+W25Qxx flash1 = {0};
 
 extern void FileTest(void);
 
@@ -16,7 +19,7 @@ void show_msg(Command_t *cmd)
 	command_get_param_value(cmd, "fvar", &var2);
 	command_get_param_value(cmd, "ivar", &var1);
 
-	SHELL_LOG("show ivar=%d, fvar=%f", var1, var2);
+	LOG_INFO("show ivar=%d, fvar=%f", var1, var2);
 	osDelay(1);
 }
 
@@ -26,11 +29,11 @@ void cmd_setled(Command_t *cmd)
 	command_get_param_value(cmd, "led1", &led);
 	if (led) {
 		//HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-		SHELL_LOG("LED1 open");
+		LOG_INFO("LED1 open");
 		osDelay(1);
 	} else {
 		//HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-		SHELL_LOG("LED1 close");
+		LOG_INFO("LED1 close");
 		osDelay(1);
 	}
 }
@@ -117,8 +120,15 @@ void cmd_spi(Command_t *cmd)
 void cmd_filetest(Command_t *cmd)
 {
 	//FileTest();
-	W25Qxx_ReadID(NULL);
-	W25qxx_Init();
+	W25Qxx_ReadID(&flash1);
+	LOG_DEBUG("-------------------------");
+	W25Qxx_Read_JEDEC_ID(&flash1);
+	RCC_ClkInitTypeDef clkConfig;
+	uint32_t frq;
+	HAL_RCC_GetClockConfig(&clkConfig, FLASH_LATENCY_0);
+	frq = HAL_RCC_GetSysClockFreq();
+	LOG_DEBUG("CPU Frq %d Hz", frq);
+	//W25qxx_Init();
 }
 
 void shell_task(void* param)

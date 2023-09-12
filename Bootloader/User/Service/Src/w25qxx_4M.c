@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #define DEBUG_PRINTF(...)	\
-	SHELL_DEBUG(__VA_ARGS__)
+	LOG_DEBUG(__VA_ARGS__)
 
 
 #endif

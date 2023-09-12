@@ -64,16 +64,16 @@ void FileTest(void)
     FRESULT res;  /* API result code */
 	BYTE mm[50];
 	UINT i;
-	SHELL_DEBUG("文件系统测试开始.");
+	LOG_DEBUG("文件系统测试�?�?.");
 	/* 挂载文件系统 */
 	res = f_mount(&fs, "0:", 0);
 	if (res)
 	{
-		SHELL_DEBUG("文件系统挂载失败.");
+		LOG_DEBUG("文件系统挂载失败.");
 	}
 	else
 	{
-		SHELL_DEBUG("文件系统挂载成功.");
+		LOG_DEBUG("文件系统挂载成功.");
 	}
 	/* Create a file as new */
 	/*res = f_open(&file, "0:/test.txt", FA_CREATE_NEW|FA_WRITE|FA_READ);
@@ -89,11 +89,11 @@ void FileTest(void)
 	//uart_printf("res write:%d\r\n",res);
 	if (bw == 12)
 	{
-		SHELL_DEBUG("写文件成功!");
+		SHELL_DEBUG("写文件成�?!");
 	}
 	else
 	{
-		SHELL_DEBUG("写文件失败!");
+		SHELL_DEBUG("写文件失�?!");
 	}
 	res = f_size(&file);
 	SHELL_DEBUG("文件大小:%d Bytes.",res);
@@ -109,28 +109,28 @@ void FileTest(void)
 	
 	res = f_open(&file, "0:/test.txt", FA_READ);
 	if (res) {
-		SHELL_DEBUG("打开文件失败.");
+		LOG_DEBUG("打开文件失败.");
 		return;
 	} else {
-		SHELL_DEBUG("打开文件成功.");
+		LOG_DEBUG("打开文件成功.");
 	}
 	res = f_read(&file,mm,12,&i);
 	if (res == FR_OK)
 	{
-		SHELL_DEBUG("读文件成功!");
-		SHELL_DEBUG("读到数据长度:%d Bytes.",i);
+		LOG_DEBUG("读文件成�?!");
+		LOG_DEBUG("读到数据长度:%d Bytes.",i);
 	}
 	else
 	{
-		SHELL_DEBUG("读文件失败!");
+		LOG_DEBUG("读文件失�?!");
 	}
-	SHELL_DEBUG("读到如下数据:%s", mm);
+	LOG_DEBUG("读到如下数据:%s", mm);
 	//buff_print((char *)mm,12);
 	/* Close the file */
 	f_close(&file);
 	/*卸载文件系统*/
 	f_mount(0, "0:", 0);
-	SHELL_DEBUG("文件系统测试完毕.");
+	LOG_DEBUG("文件系统测试完毕.");
 } 
 
 /* USER CODE END DECL */
@@ -232,7 +232,7 @@ DRESULT USER_read (
 	for(i = 0;i < count;i++)
 	{
 		//sFLASH_ReadBuffer(buff + i * 4096,sector * 4096 + i * 4096,4096 );
-		SHELL_DEBUG("W25qxx_ReadSector");
+		LOG_DEBUG("W25qxx_ReadSector");
 		W25qxx_ReadSector(buff + i * 4096, sector + i, 0, 4096);
 	}
   /* USER CODE END READ */

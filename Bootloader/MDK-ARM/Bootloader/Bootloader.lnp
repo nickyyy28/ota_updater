@@ -61,6 +61,7 @@
 "bootloader\usbd_cdc.o"
 "bootloader\uni_shell.o"
 "bootloader\w25qxx_4m.o"
+"bootloader\soft_i2c.o"
 "bootloader\shelltask.o"
 "bootloader\boot.o"
 "bootloader\w25qxx_driver.o"

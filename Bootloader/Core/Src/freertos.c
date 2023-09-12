@@ -129,6 +129,7 @@ void StartDefaultTask(void *argument)
   {
 		uint64_t stack_use = uxTaskGetStackHighWaterMark(shellTaskHandle);
 		//SHELL_DEBUG("Stack Usage: %lu Byte", stack_use * 4);
+	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);
     osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */

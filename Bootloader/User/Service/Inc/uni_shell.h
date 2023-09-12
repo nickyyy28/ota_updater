@@ -23,11 +23,19 @@
 
 //#define USE_CACHE
 
+#define LOG_LEVEL_DEBUG 	1
+#define LOG_LEVEL_INFO 		2
+#define LOG_LEVEL_WARNING 	3
+#define LOG_LEVEL_ERROR 	4
+#define LOG_LEVEL_FATAL 	5
+
+#define LOG_LEVEL	LOG_LEVEL_DEBUG
+
 #define RX_BUFFSIZE	128				//串口或USBCDC接收缓冲区大小, 但是USBCDC一般单次数据包最多64字节, 注意使用方式
 
 #define CURRSOR_BLINK		1		//光标是否闪烁
 #define CURRSOR_BLINK_FRQ	3		//闪烁频率
-#define CONSOLE_COLOR_ENABLE 1 //
+#define CONSOLE_COLOR_ENABLE 1 		//是否使用彩色日志信息
 #define CURRSOR_BLINK_TICK	(int)(1000 / CURRSOR_BLINK_FRQ * 2)
 
 /* 键盘控制字符 */
@@ -41,7 +49,6 @@
 
 #define DELAY_TICK	5			//发送后的延迟函数, 如果使用串口传输,该参数可以不管, 如果使用USBCDC, 该参数酌情配置,单位ms
 
-#define COLORFUL_LOG_INFO	1	//是否使用彩色日志信息
 #define CONSOLE_COLOR_BLACK  "\033[30m"
 #define CONSOLE_COLOR_RED  "\033[31m"
 #define CONSOLE_COLOR_GREEN  "\033[32m"
@@ -87,6 +94,14 @@
 #define SHELL_Transmit(src, len)	HAL_UART_Transmit(&SHELL_USART, src, len, DELAY_TICK)
 
 #endif
+
+typedef enum{
+	LOG_DEBUG = 1,
+	LOG_INFO,
+	LOG_WARNING,
+	LOG_ERROR,
+	LOG_FATAL
+}_LOG_LEVEL;
 
 /**
  * @brief 	参数类型
@@ -229,20 +244,13 @@ void shell_init(void);
 void shell_exec(void);
 
 /**
- * @brief 	shell发送日志
+ * @brief 	shell发送日志信息
  * 
- * @param fmt  日志格式
- * @param ...  可变参数
- */
-void SHELL_LOG(const char* fmt, ...);
-
-/**
- * @brief 	shell发送调试信息
- * 
+ * @param level 日志等级
  * @param fmt  调试信息格式
  * @param ...  可变参数
  */
-void SHELL_DEBUG(const char* fmt, ...);
+void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...);
 
 /**
  * @brief 	shell发送数据
@@ -251,6 +259,36 @@ void SHELL_DEBUG(const char* fmt, ...);
  * @param ...  	可变参数
  */
 void SHELL_PRINTF(const char* fmt, ...);
+
+#if LOG_LEVEL <= LOG_LEVEL_DEBUG
+#define	LOG_DEBUG(fmt, ...) SHELL_LOG_LEVEL(LOG_DEBUG, fmt, ##__VA_ARGS__)
+#else
+#define	LOG_DEBUG(...)
+#endif
+
+#if LOG_LEVEL <= LOG_LEVEL_INFO
+#define	LOG_INFO(fmt, ...) SHELL_LOG_LEVEL(LOG_INFO, fmt, ##__VA_ARGS__)
+#else
+#define	LOG_INFO(__VA_ARGS__)
+#endif
+
+#if LOG_LEVEL <= LOG_LEVEL_WARNING
+#define	LOG_WARNING(fmt, ...) SHELL_LOG_LEVEL(LOG_WARNING, fmt, ##__VA_ARGS__)
+#else
+#define	LOG_WARNING(__VA_ARGS__)
+#endif
+
+#if LOG_LEVEL <= LOG_LEVEL_ERROR
+#define	LOG_ERROR(fmt, ...) SHELL_LOG_LEVEL(LOG_ERROR, fmt, ##__VA_ARGS__)
+#else
+#define	LOG_ERROR(__VA_ARGS__)
+#endif
+
+#if LOG_LEVEL <= LOG_LEVEL_FATAL
+#define	LOG_FATAL(fmt, ...) SHELL_LOG_LEVEL(LOG_FATAL, fmt, ##__VA_ARGS__)
+#else
+#define	LOG_FATAL(__VA_ARGS__)
+#endif
 
 #if defined USE_USBCDC
 void CDC_Transmit_Packet(uint8_t *src, uint32_t len);
