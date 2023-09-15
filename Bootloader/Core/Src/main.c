@@ -91,7 +91,7 @@ void SDA_OUT()
 	GPIO_InitStruct.Pin = SOFT_IIC_SDA_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 }
 
@@ -102,24 +102,31 @@ void SCL_OUT()
 	GPIO_InitStruct.Pin = SOFT_IIC_SCL_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 }
 
 void SDA_IN()
 {
-	__HAL_RCC_GPIOE_CLK_ENABLE();
+	/*__HAL_RCC_GPIOE_CLK_ENABLE();
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	GPIO_InitStruct.Pin = SOFT_IIC_SDA_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);*/
 }
 
 uint8_t IIC_SDA_Read_Pin(void)
 {
 	return HAL_GPIO_ReadPin(SOFT_IIC_SDA_GPIO_Port, SOFT_IIC_SDA_Pin);
+}
+
+uint32_t get_cpu_frq(void)
+{
+	RCC_ClkInitTypeDef clkConfig;
+	HAL_RCC_GetClockConfig(&clkConfig, FLASH_LATENCY_0);
+	return HAL_RCC_GetSysClockFreq();
 }
 /* USER CODE END 0 */
 

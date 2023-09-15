@@ -7,6 +7,9 @@
 #include <string.h>
 #include "usart.h"
 #include "w25qxx_driver.h"
+#include "soft_i2c.h"
+#include "eeprom_at24c256.h"
+#include "oled_ssd1306_1_3.h"
 
 W25Qxx flash1 = {0};
 
@@ -117,23 +120,41 @@ void cmd_spi(Command_t *cmd)
 
 #include "w25qxx_driver.h"
 
+uint8_t eeprom_str[64] = {0};
+
 void cmd_filetest(Command_t *cmd)
 {
 	//FileTest();
-	W25Qxx_ReadID(&flash1);
+	/*W25Qxx_ReadID(&flash1);
 	LOG_DEBUG("-------------------------");
 	W25Qxx_Read_JEDEC_ID(&flash1);
 	RCC_ClkInitTypeDef clkConfig;
 	uint32_t frq;
 	HAL_RCC_GetClockConfig(&clkConfig, FLASH_LATENCY_0);
 	frq = HAL_RCC_GetSysClockFreq();
-	LOG_DEBUG("CPU Frq %d Hz", frq);
-	//W25qxx_Init();
+	LOG_DEBUG("CPU Frq %d Hz", frq);*/
+	
+	//eeprom_read_page(0xA0, 0, 0, eeprom_str, 10);
+	//LOG_INFO("read str %s", eeprom_str);
+	
+	extern void IIC_Test();
+	//IIC_Test();
+	OLED_Init();
+	LOG_INFO("OLED Init...");
+	osDelay(1000);
+	LOG_INFO("OLED Clear");
+	OLED_Clear();
+	osDelay(1000);
+	OLED_Show_Char(1, 1, 'A');
+	LOG_INFO("OLED Show Char");
 }
 
 void shell_task(void* param)
 {
 	shell_init();
+	IIC_Init();
+	osDelay(100);
+	OLED_Init();
 	//W25qxx_Init();
 	//MX_USB_DEVICE_Init();
 	Command_t *cmd = register_command("show", show_msg);

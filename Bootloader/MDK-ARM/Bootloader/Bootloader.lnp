@@ -65,6 +65,8 @@
 "bootloader\shelltask.o"
 "bootloader\boot.o"
 "bootloader\w25qxx_driver.o"
+"bootloader\eeprom_at24c256.o"
+"bootloader\oled_ssd1306_1_3.o"
 --strict --scatter "Bootloader\Bootloader.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

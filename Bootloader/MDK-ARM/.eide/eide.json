@@ -313,6 +313,12 @@
             "name": "Driver",
             "files": [
               {
+                "path": "../User/Driver/Src/eeprom_at24c256.c"
+              },
+              {
+                "path": "../User/Driver/Src/oled_ssd1306_1_3.c"
+              },
+              {
                 "path": "../User/Driver/Src/w25qxx_driver.c"
               }
             ],
@@ -321,6 +327,9 @@
           {
             "name": "Service",
             "files": [
+              {
+                "path": "../User/Service/Src/soft_i2c.c"
+              },
               {
                 "path": "../User/Service/Src/uni_shell.c"
               },
