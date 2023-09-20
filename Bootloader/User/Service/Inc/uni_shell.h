@@ -147,7 +147,7 @@ typedef struct{
 	char key[COMMAND_MAX_PARAM_KEY_SIZE];		//参数名
 	char value[COMMAND_MAX_PARAM_VALUE_SIZE];	//参数值
 	Param_Type type;							//参数类型
-	Param_Status status;						//参数状态
+	Param_Status status;		 				//参数状态
 }Param_t;
 
 //命令缓冲区

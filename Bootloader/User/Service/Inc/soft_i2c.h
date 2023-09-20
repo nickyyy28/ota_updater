@@ -17,4 +17,7 @@ void IIC_NACK(void);
 uint8_t IIC_Send_Byte(uint8_t ch);
 uint8_t IIC_Recv_Byte(uint8_t ack);
 
+uint8_t IIC_Read_Mem(uint8_t device_addr, uint16_t mem_addr, uint8_t *buffer, uint32_t len);
+uint8_t IIC_Write_Mem(uint8_t device_addr, uint16_t mem_addr, const uint8_t *buffer, uint32_t len);
+
 #endif

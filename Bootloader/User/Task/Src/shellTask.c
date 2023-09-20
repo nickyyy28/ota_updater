@@ -134,19 +134,21 @@ void cmd_filetest(Command_t *cmd)
 	frq = HAL_RCC_GetSysClockFreq();
 	LOG_DEBUG("CPU Frq %d Hz", frq);*/
 	
-	//eeprom_read_page(0xA0, 0, 0, eeprom_str, 10);
-	//LOG_INFO("read str %s", eeprom_str);
+	//LOG_INFO("writing string to eeprom");
+	//eeprom_write_str(0xA0, 0, 0, "test", 4);
+	//osDelay(100);
+	LOG_INFO("reading string from eeprom");
+	eeprom_read_page(0xA0, 0, 0, eeprom_str, 4);
+	LOG_INFO("read str %s", eeprom_str);
 	
-	extern void IIC_Test();
-	//IIC_Test();
-	OLED_Init();
+	/*OLED_Init();
 	LOG_INFO("OLED Init...");
 	osDelay(1000);
 	LOG_INFO("OLED Clear");
 	OLED_Clear();
 	osDelay(1000);
 	OLED_Show_Char(1, 1, 'A');
-	LOG_INFO("OLED Show Char");
+	LOG_INFO("OLED Show Char");*/
 }
 
 void shell_task(void* param)

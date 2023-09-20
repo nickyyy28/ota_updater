@@ -27,14 +27,14 @@ Project File Date:  09/15/2023
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Bootloader'
-compiling oled_ssd1306_1_3.c...
-../User/Service/Inc/soft_i2c.h(20): warning:  #1-D: last line of file ends without a newline
+compiling soft_i2c.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
   #endif
-..\User\Driver\Src\oled_ssd1306_1_3.c(238): warning:  #1-D: last line of file ends without a newline
+..\User\Service\Src\soft_i2c.c(52): warning:  #940-D: missing return statement at end of non-void function "IIC_SDA_Read_Pin" 
   }
-..\User\Driver\Src\oled_ssd1306_1_3.c: 2 warnings, 0 errors
+..\User\Service\Src\soft_i2c.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=56504 RO-data=3036 RW-data=888 ZI-data=37736  
+Program Size: Code=56920 RO-data=1584 RW-data=888 ZI-data=37800  
 FromELF: creating hex file...
 "Bootloader\Bootloader.axf" - 0 Error(s), 2 Warning(s).
 
@@ -60,7 +60,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

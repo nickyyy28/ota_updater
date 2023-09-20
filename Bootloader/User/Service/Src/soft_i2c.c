@@ -5,6 +5,7 @@ uint32_t cpu_frq = 0;
 uint32_t nop_delay_1us_times = 0;
 
 #define IIC_WAIT_4US() iic_delay(4 * nop_delay_1us_times)
+#define IIC_WAIT_3US() iic_delay(3 * nop_delay_1us_times)
 #define IIC_WAIT_2US() iic_delay(2 * nop_delay_1us_times)
 #define IIC_WAIT_1US() iic_delay(1 * nop_delay_1us_times)
 
@@ -105,9 +106,9 @@ void IIC_ACK(void)
 	IIC_SCL_L;
 	SDA_OUT();
 	IIC_SDA_L;
-	IIC_WAIT_2US();
+	IIC_WAIT_4US();
 	IIC_SCL_H;
-	IIC_WAIT_2US();
+	IIC_WAIT_4US();
 	IIC_SCL_L;
 }
 
@@ -116,9 +117,9 @@ void IIC_NACK(void)
 	IIC_SCL_L;
 	SDA_OUT();
 	IIC_SDA_H;
-	IIC_WAIT_2US();
+	IIC_WAIT_4US();
 	IIC_SCL_H;
-	IIC_WAIT_2US();
+	IIC_WAIT_4US();
 	IIC_SCL_L;
 }
 
@@ -165,13 +166,13 @@ uint8_t IIC_Recv_Byte(uint8_t ack)
 	SDA_IN();
 	for (int i = 0 ; i < 8 ; i++) {
 		IIC_SCL_L;
-		IIC_WAIT_2US();
+		IIC_WAIT_4US();
 		IIC_SCL_H;
 		recv = recv << 1;
 		if (IIC_SDA_Read_Pin()) {
 			recv |= 1;
 		}
-		IIC_WAIT_1US();
+		IIC_WAIT_4US();
 	}
 	
 	if (ack) {
@@ -194,3 +195,54 @@ void IIC_Init(void)
 	IIC_SCL_H;
 	IIC_SDA_H;
 }
+
+uint8_t IIC_Read_Mem(uint8_t device_addr, uint16_t mem_addr, uint8_t *buffer, uint32_t len)
+{
+	IIC_Start();
+	if (IIC_Send_Byte(device_addr)) {
+		return 1;
+	}
+	if (IIC_Send_Byte(mem_addr >> 8)) {
+		return 1;
+	}
+	if (IIC_Send_Byte(mem_addr % 256)) {
+		return 1;
+	}
+	
+	IIC_Start();
+	if (IIC_Send_Byte(device_addr | 1)) {
+		return 1;
+	}
+	
+	uint32_t i = 0;
+	for (i = 0 ; i < len - 1 ; i++) {
+		buffer[i] = IIC_Recv_Byte(1);
+	}
+	buffer[i] = IIC_Recv_Byte(0);
+	IIC_Stop();
+	return 0;
+} 
+	
+uint8_t IIC_Write_Mem(uint8_t device_addr, uint16_t mem_addr, const uint8_t *buffer, uint32_t len)
+{
+	IIC_Start();
+	if (IIC_Send_Byte(device_addr)) {
+		return 1;
+	}
+	if (IIC_Send_Byte(mem_addr >> 8)) {
+		return 1;
+	}
+	if (IIC_Send_Byte(mem_addr % 256)) {
+		return 1;
+	}
+	for (int i = 0 ; i < len ; i++) {
+		if (IIC_Send_Byte(buffer[i])) {
+			IIC_Stop();
+			return 1;
+		}
+	}
+	
+	IIC_Stop();
+	return 0;
+}
+

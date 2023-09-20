@@ -106,17 +106,6 @@ void SCL_OUT()
 	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 }
 
-void SDA_IN()
-{
-	/*__HAL_RCC_GPIOE_CLK_ENABLE();
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = SOFT_IIC_SDA_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);*/
-}
-
 uint8_t IIC_SDA_Read_Pin(void)
 {
 	return HAL_GPIO_ReadPin(SOFT_IIC_SDA_GPIO_Port, SOFT_IIC_SDA_Pin);
