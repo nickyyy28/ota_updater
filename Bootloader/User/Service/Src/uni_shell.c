@@ -175,7 +175,6 @@ Command_t* decode_command(uint8_t *src, uint32_t size)
 	char key[COMMAND_MAX_PARAM_KEY_SIZE] = {0};
 	char value[COMMAND_MAX_PARAM_VALUE_SIZE] = {0};
 	int tmp_index = 0;
-	uint8_t isStartGet = 0;
 	Param_t *param = NULL;
 	while (index < size && src[index] != '\n' && src[index] != '\0') {
 			
@@ -562,7 +561,7 @@ void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...)
     
     vsprintf(raw_buffer, fmt, args);
 	uint32_t cur_tick = HAL_GetTick();
-	uint32_t hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
+	uint32_t hours = 0, minutes = 0, seconds = 0;
 	hours = cur_tick / (1000 * 60 * 60);
 	cur_tick %= (1000 * 60 * 60);
 	minutes = cur_tick / (1000 * 60);

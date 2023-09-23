@@ -328,6 +328,9 @@
             "name": "Service",
             "files": [
               {
+                "path": "../User/Service/Src/ring_buffer.c"
+              },
+              {
                 "path": "../User/Service/Src/soft_i2c.c"
               },
               {

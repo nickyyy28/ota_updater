@@ -290,6 +290,20 @@ void SHELL_PRINTF(const char* fmt, ...);
 #define	LOG_FATAL(__VA_ARGS__)
 #endif
 
+#define LOG_ASSERT(__cond__, __then__, __fmt__, ...)	\
+	do {						\
+		if (__cond__) {			\
+			LOG_ERROR("<%s:%d>" __fmt__, __FILE__, __LINE__, ##__VA_ARGS__);			\
+			{ __then__; }	\
+		}						\
+	} while(0)
+
+#define RETURN_ASSERT(__cond__, __fmt__, ...)	\
+	LOG_ASSERT(__cond__, return, __fmt__, ##__VA_ARGS__)
+
+#define CRASH_ASSERT(__cond__, __fmt__, ...)	\
+	LOG_ASSERT(__cond__, int i = 1 / 0;, __fmt__, ##__VA_ARGS__)
+
 #if defined USE_USBCDC
 void CDC_Transmit_Packet(uint8_t *src, uint32_t len);
 #endif

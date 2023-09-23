@@ -957,6 +957,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Service\Src\soft_i2c.c</FilePath>
             </File>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Service\Src\ring_buffer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
