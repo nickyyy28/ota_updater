@@ -7,17 +7,33 @@ extern "C" {
 
 #include <stdint.h>
 
+
 #define USE_DEBUG 	1
 #define USED_RTOS	1
+
+#define __LITTLE_ENDIAN_ 	0
+#define __BIG_ENDIAN_		1
+
+#define BYTE_ORDER 	__LITTLE_ENDIAN_
 
 #define FLASH_CS_GPIO_PORT	GPIOD
 #define FLASH_CS_GPIO_PIN	GPIO_PIN_6
 
 #define FLASH_SPI hspi1
 
-#define W25Qxx_Read_Data_Byte 		0x03
-#define W25Qxx_Write_Enable_Byte	0x06
-#define W25Qxx_Write_Disable_Byte	0x04
+#define W25QXX_READ_DATA_CMD 		0x03
+#define W25QXX_WRITE_ENABLE_CMD		0x06
+#define W25QXX_WRITE_DISABLE_CMD	0x04
+
+#define W25QXX_READ_STATUS_REGISTER1_CMD	0x05
+#define W25QXX_READ_STATUS_REGISTER2_CMD	0x35
+#define W25QXX_READ_STATUS_REGISTER3_CMD	0x15
+
+#define W25QXX_WRITE_STATUS_REGISTER1_CMD	0x01
+#define W25QXX_WRITE_STATUS_REGISTER2_CMD	0x31
+#define W25QXX_WRITE_STATUS_REGISTER3_CMD	0x11
+
+#define W25QXX_ERASE_SECTOR_CMD		0x20
 
 #if USE_DEBUG == 1
 #define W25Qxx_DEBUG(...) LOG_DEBUG(__VA_ARGS__)
@@ -46,6 +62,7 @@ typedef enum{
 	W25Qxx_OK = 0,
 	W25Qxx_Error,
 	W25Qxx_Init_Fail,
+	W25Qxx_Timeout,
 }W25Qxx_Status;
 
 typedef enum{
@@ -70,20 +87,110 @@ typedef struct{
 	uint32_t BlockSize;
 	uint32_t BlockCount;
 	uint32_t CapacityInKiloByte;
-	uint8_t StatusRegister1;
-	uint8_t StatusRegister2;
-	uint8_t StatusRegister3;
+
+#if BYTE_ORDER == __BIG_ENDIAN_
+	struct
+	{
+		uint8_t SRP : 1;
+		uint8_t SEC : 1;
+		uint8_t TB : 1;
+		uint8_t BP2 : 1;
+		uint8_t BP1 : 1;
+		uint8_t BP0 : 1;
+		uint8_t WEL : 1;
+		uint8_t BUSY : 1;
+	}StatusRegister1;
+
+#elif BYTE_ORDER == __LITTLE_ENDIAN_
+	union
+	{
+		uint8_t buffer;
+		struct {
+			uint8_t BUSY : 1;
+			uint8_t WEL : 1;
+			uint8_t BP0 : 1;
+			uint8_t BP1 : 1;
+			uint8_t BP2 : 1;
+			uint8_t TB : 1;
+			uint8_t SEC : 1;
+			uint8_t SRP : 1;
+		}reg;
+	}StatusRegister1;
+
+	union
+	{
+		uint8_t buffer;
+		struct {
+			uint8_t SRL : 1;
+			uint8_t QE : 1;
+			uint8_t  : 1;
+			uint8_t LB1 : 1;
+			uint8_t LB2 : 1;
+			uint8_t LB3 : 1;
+			uint8_t CMP : 1;
+			uint8_t SUS : 1;
+		}reg;
+	}StatusRegister2;
+
+	union
+	{
+		uint8_t buffer;
+		struct {
+			uint8_t  : 2;
+			uint8_t WPS : 1;
+			uint8_t  : 2;
+			uint8_t DRV0 : 1;
+			uint8_t DRV1 : 1;
+			uint8_t  : 1;
+		}reg;
+	}StatusRegister3;
+#endif
 }W25Qxx;
  
-W25Qxx_Status W25Qxx_ReadID(W25Qxx *flash);
-W25Qxx_Status W25Qxx_Read_JEDEC_ID(W25Qxx *flash);
+W25Qxx_Status w25qxx_read_id(W25Qxx *flash);
+W25Qxx_Status w25qxx_read_JEDEC_id(W25Qxx *flash);
 
-W25Qxx_Status W25Qxx_Init(W25Qxx *flash);
+W25Qxx_Status w25qxx_init(W25Qxx *flash);
 
-W25Qxx_Status W25Qxx_Write_Enable();
-W25Qxx_Status W25Qxx_Write_Disable();
+W25Qxx_Status w25qxx_write_enable(void);
+W25Qxx_Status w25qxx_write_disable(void);
 
-W25Qxx_Status W25Qxx_Read_Page(uint32_t addr, uint8_t* buffer, W25Qxx *flash);
+/**
+ * @brief read w25qxx status register
+ * 
+ * @param flash 
+ * @param id 		num 1-3
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_read_status_register(W25Qxx *flash, uint8_t id);
+
+/**
+ * @brief read w25qxx page data
+ * 
+ * @param addr page addr. 0-pageCount
+ * @param buffer 
+ * @param flash 
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer);
+
+/**
+ * @brief erase w25qxx sector
+ * 
+ * @param flash 
+ * @param sector_addr sector addr, 0-sectorCount
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_erase_sector(W25Qxx *flash, uint32_t sector_addr);
+
+/**
+ * @brief wait w25qxx out of busy
+ * 
+ * @param flash
+ * @param timeout timeout
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_wait_busy(W25Qxx *flash, uint32_t timeout);
 
 #ifdef __cplusplus
 }

@@ -64,7 +64,7 @@ uint8_t ring_buffer_view_data(RingBuffer *buffer, uint8_t *dst, uint32_t len)
     } else {
         uint32_t temp = buffer->capacity - buffer->head;
         memcpy(dst, &buffer->buffer[buffer->head], temp);
-        memchr(dst + temp, &buffer->buffer[0], len - temp);
+        memcpy(dst + temp, &buffer->buffer[0], len - temp);
     }
     return 0;
 }

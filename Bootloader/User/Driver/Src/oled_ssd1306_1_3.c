@@ -153,7 +153,7 @@ uint8_t OLED_Init(void)
 	OLED_Clear();				//clear display
 	ret = 0;
 end:
-	return ret;
+	return ret; 
 }
 
 uint8_t OLED_Write_Command(uint8_t cmd)

@@ -21,7 +21,7 @@ uint8_t W25Qxx_SPI_TransmitReceive(uint8_t ch)
 	return ret;
 }
 
-W25Qxx_Status W25Qxx_ReadID(W25Qxx *flash)
+W25Qxx_Status w25qxx_read_id(W25Qxx *flash)
 {
 	if (flash == NULL) {
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
@@ -84,7 +84,7 @@ end:
 	return status;
 }
 
-W25Qxx_Status W25Qxx_Read_JEDEC_ID(W25Qxx *flash) 
+W25Qxx_Status w25qxx_read_JEDEC_id(W25Qxx *flash) 
 {
 	if (flash == NULL) {
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
@@ -146,27 +146,47 @@ end:
 	return status;
 }
 
-W25Qxx_Status W25Qxx_Init(W25Qxx *flash)
+W25Qxx_Status w25qxx_init(W25Qxx *flash)
 {
 	if (flash == NULL) {
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
 		return W25Qxx_Error;
 	}
 	
-	return W25Qxx_ReadID(flash);
+	return w25qxx_read_id(flash);
 }
 
-W25Qxx_Status W25Qxx_Write_Enable()
+W25Qxx_Status w25qxx_write_enable()
 {
-	return W25Qxx_Error;
+	FLASH_CS_LOW();
+	W25Qxx_Status ret = W25Qxx_Error;
+	uint8_t cmd = W25QXX_WRITE_ENABLE_CMD;
+	if (HAL_SPI_Transmit(&FLASH_SPI, &cmd, 1, 100)) {
+		ret = W25Qxx_Error;
+		goto end;
+	}
+	ret = W25Qxx_OK;
+end:
+	FLASH_CS_HIGH();
+	return ret;
 }
 
-W25Qxx_Status W25Qxx_Write_Disable()
+W25Qxx_Status w25qxx_write_disable()
 {
-	return W25Qxx_Error;
+	FLASH_CS_LOW();
+	W25Qxx_Status ret = W25Qxx_Error;
+	uint8_t cmd = W25QXX_WRITE_DISABLE_CMD;
+	if (HAL_SPI_Transmit(&FLASH_SPI, &cmd, 1, 100)) {
+		ret = W25Qxx_Error;
+		goto end;
+	}
+	ret = W25Qxx_OK;
+end:
+	FLASH_CS_HIGH();
+	return ret;
 }
 
-W25Qxx_Status W25Qxx_Read_Page(uint32_t addr, uint8_t* buffer, W25Qxx *flash)
+W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer)
 {
 	if (flash == NULL) {
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
@@ -174,27 +194,28 @@ W25Qxx_Status W25Qxx_Read_Page(uint32_t addr, uint8_t* buffer, W25Qxx *flash)
 	}
 
 	W25Qxx_Status ret = W25Qxx_Error;
+	page_addr *= flash->PageSize;
 
 	FLASH_CS_LOW();
 
 	static char read_cmd[5] = {0};
 
-	read_cmd[0] = W25Qxx_Read_Data_Byte;
+	read_cmd[0] = W25QXX_READ_DATA_CMD;
 	uint32_t len;
 	if (flash->Type >= W25Q256) {
-		read_cmd[1] = (uint8_t)(addr >> 24);
-		read_cmd[2] = (uint8_t)(addr >> 16);
-		read_cmd[3] = (uint8_t)(addr >> 8);
-		read_cmd[4] = (uint8_t)(addr);
+		read_cmd[1] = (uint8_t)(page_addr >> 24);
+		read_cmd[2] = (uint8_t)(page_addr >> 16);
+		read_cmd[3] = (uint8_t)(page_addr >> 8);
+		read_cmd[4] = (uint8_t)(page_addr);
 		len = 5;
 	} else {
-		read_cmd[1] = (uint8_t)(addr >> 16);
-		read_cmd[2] = (uint8_t)(addr >> 8);
-		read_cmd[3] = (uint8_t)(addr);
+		read_cmd[1] = (uint8_t)(page_addr >> 16);
+		read_cmd[2] = (uint8_t)(page_addr >> 8);
+		read_cmd[3] = (uint8_t)(page_addr);
 		len = 4;
 	}
 
-	if (HAL_SPI_Transmit(&FLASH_SPI, read_cmd, len, 100) != HAL_OK) {
+	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)read_cmd, len, 100) != HAL_OK) {
 		W25Qxx_ERROR("Send Read Data Cmd Fail");
 		ret = W25Qxx_Error;
 		goto end;
@@ -211,4 +232,110 @@ end:
 	FLASH_CS_HIGH();
 
 	return ret;
+}
+
+W25Qxx_Status w25qxx_erase_sector(W25Qxx *flash, uint32_t sector_addr)
+{
+	if (flash == NULL) {
+		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
+		return W25Qxx_Error;
+	}
+
+	w25qxx_wait_busy(flash, 0);
+
+	W25Qxx_Status ret = W25Qxx_Error;
+	sector_addr *= flash->SectorSize;
+
+	FLASH_CS_LOW();
+
+	static char read_cmd[5] = {0};
+
+	read_cmd[0] = W25QXX_ERASE_SECTOR_CMD;
+	uint32_t len;
+	if (flash->Type >= W25Q256) {
+		read_cmd[1] = (uint8_t)(sector_addr >> 24);
+		read_cmd[2] = (uint8_t)(sector_addr >> 16);
+		read_cmd[3] = (uint8_t)(sector_addr >> 8);
+		read_cmd[4] = (uint8_t)(sector_addr);
+		len = 5;
+	} else {
+		read_cmd[1] = (uint8_t)(sector_addr >> 16);
+		read_cmd[2] = (uint8_t)(sector_addr >> 8);
+		read_cmd[3] = (uint8_t)(sector_addr);
+		len = 4;
+	}
+
+	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)read_cmd, len, 100) != HAL_OK) {
+		W25Qxx_ERROR("send erase cmd fail");
+		ret = W25Qxx_Error;
+		goto end;
+	}
+	ret = W25Qxx_OK;
+end:
+
+	FLASH_CS_HIGH();
+	w25qxx_wait_busy(flash, 0);
+	return ret;
+}
+
+W25Qxx_Status w25qxx_read_status_register(W25Qxx *flash, uint8_t id)
+{
+	W25Qxx_Status ret = W25Qxx_Error;
+
+	FLASH_CS_LOW();
+	uint8_t cmd = 0;
+	uint8_t *reg = NULL;
+	switch (id) {
+		case 1:
+			cmd = W25QXX_READ_STATUS_REGISTER1_CMD;
+			reg = &flash->StatusRegister1.buffer;
+			break;
+		case 2:
+			cmd = W25QXX_READ_STATUS_REGISTER2_CMD;
+			reg = &flash->StatusRegister2.buffer;
+			break;
+		case 3:
+			cmd = W25QXX_READ_STATUS_REGISTER3_CMD;
+			reg = &flash->StatusRegister3.buffer;
+			break;
+		default:
+			goto end;
+	}
+
+	if (HAL_SPI_Transmit(&FLASH_SPI, &cmd, 1, 100) != HAL_OK) {
+		W25Qxx_ERROR("send read status register %d command fail", cmd);
+		ret = W25Qxx_Error;
+		goto end;
+	}
+
+
+	if (HAL_SPI_Receive(&FLASH_SPI, reg, 1, 100) != HAL_OK) {
+		W25Qxx_ERROR("receive register data %d fail", cmd);
+		ret = W25Qxx_Error;
+		goto end;
+	}
+
+end:
+	FLASH_CS_HIGH();
+	return ret;
+}
+
+W25Qxx_Status w25qxx_wait_busy(W25Qxx *flash, uint32_t timeout)
+{
+	if (timeout == 0) {
+		do {
+			w25qxx_read_status_register(flash, 1);
+			flash_delay(1);
+		} while (flash->StatusRegister1.reg.BUSY);
+		return W25Qxx_OK;
+	} else {
+		while (timeout--) {
+			w25qxx_read_status_register(flash, 1);
+			if (!flash->StatusRegister1.reg.BUSY) {
+				return W25Qxx_OK;
+			}
+			flash_delay(1);
+		}
+		return W25Qxx_Timeout;
+	}
 }

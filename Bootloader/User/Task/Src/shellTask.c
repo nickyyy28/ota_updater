@@ -125,10 +125,17 @@ uint8_t eeprom_str[64] = {0};
 void cmd_filetest(Command_t *cmd)
 {
 	//FileTest();
-	/*W25Qxx_ReadID(&flash1);
+	w25qxx_read_id(&flash1);
 	LOG_DEBUG("-------------------------");
-	W25Qxx_Read_JEDEC_ID(&flash1);
-	RCC_ClkInitTypeDef clkConfig;
+	w25qxx_read_JEDEC_id(&flash1);
+	LOG_DEBUG("-------------------------");
+	w25qxx_read_status_register(&flash1, 1);
+	w25qxx_read_status_register(&flash1, 2);
+	w25qxx_read_status_register(&flash1, 3);
+
+	LOG_INFO("reg1: %X, reg2: %X, reg3: %X", flash1.StatusRegister1.buffer, flash1.StatusRegister2.buffer, flash1.StatusRegister3.buffer);
+
+	/*RCC_ClkInitTypeDef clkConfig;
 	uint32_t frq;
 	HAL_RCC_GetClockConfig(&clkConfig, FLASH_LATENCY_0);
 	frq = HAL_RCC_GetSysClockFreq();

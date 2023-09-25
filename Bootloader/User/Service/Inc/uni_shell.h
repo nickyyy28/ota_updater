@@ -261,31 +261,31 @@ void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...);
 void SHELL_PRINTF(const char* fmt, ...);
 
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
-#define	LOG_DEBUG(fmt, ...) SHELL_LOG_LEVEL(LOG_DEBUG, fmt, ##__VA_ARGS__)
+#define	LOG_DEBUG(__fmt__, ...) SHELL_LOG_LEVEL(LOG_DEBUG, __fmt__, ##__VA_ARGS__)
 #else
 #define	LOG_DEBUG(...)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_INFO
-#define	LOG_INFO(fmt, ...) SHELL_LOG_LEVEL(LOG_INFO, fmt, ##__VA_ARGS__)
+#define	LOG_INFO(__fmt__, ...) SHELL_LOG_LEVEL(LOG_INFO, __fmt__, ##__VA_ARGS__)
 #else
 #define	LOG_INFO(__VA_ARGS__)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_WARNING
-#define	LOG_WARNING(fmt, ...) SHELL_LOG_LEVEL(LOG_WARNING, fmt, ##__VA_ARGS__)
+#define	LOG_WARNING(__fmt__, ...) SHELL_LOG_LEVEL(LOG_WARNING, __fmt__, ##__VA_ARGS__)
 #else
 #define	LOG_WARNING(__VA_ARGS__)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_ERROR
-#define	LOG_ERROR(fmt, ...) SHELL_LOG_LEVEL(LOG_ERROR, fmt, ##__VA_ARGS__)
+#define	LOG_ERROR(__fmt__, ...) SHELL_LOG_LEVEL(LOG_ERROR, __fmt__, ##__VA_ARGS__)
 #else
 #define	LOG_ERROR(__VA_ARGS__)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_FATAL
-#define	LOG_FATAL(fmt, ...) SHELL_LOG_LEVEL(LOG_FATAL, fmt, ##__VA_ARGS__)
+#define	LOG_FATAL(__fmt__, ...) SHELL_LOG_LEVEL(LOG_FATAL, __fmt__, ##__VA_ARGS__)
 #else
 #define	LOG_FATAL(__VA_ARGS__)
 #endif
