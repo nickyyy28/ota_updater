@@ -122,6 +122,8 @@ void cmd_spi(Command_t *cmd)
 
 uint8_t eeprom_str[64] = {0};
 
+uint8_t w25qxx_buffer[256] = {0};
+
 void cmd_filetest(Command_t *cmd)
 {
 	//FileTest();
@@ -134,6 +136,31 @@ void cmd_filetest(Command_t *cmd)
 	w25qxx_read_status_register(&flash1, 3);
 
 	LOG_INFO("reg1: %X, reg2: %X, reg3: %X", flash1.StatusRegister1.buffer, flash1.StatusRegister2.buffer, flash1.StatusRegister3.buffer);
+
+	uint8_t ret = 0;
+	LOG_DEBUG("erasing sector 0");
+	ret = w25qxx_erase_sector(&flash1, 0);
+	
+	ret = w25qxx_write_page(&flash1, 0, "hello world", 11);
+	
+	
+
+	for (int page_index = 0 ; page_index < 32 ; page_index++) {
+		ret = w25qxx_read_page(&flash1, 1, w25qxx_buffer, 256);
+		LOG_DEBUG("ret = %d", ret);
+		LOG_DEBUG("read page: %d data: ", page_index);
+		for (int i = 0 ; i < 16 ; i++) {
+			LOG_DEBUG("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", 
+				w25qxx_buffer[i * 8 + 0], w25qxx_buffer[i * 8 + 1], w25qxx_buffer[i * 8 + 2], w25qxx_buffer[i * 8 + 3],
+				w25qxx_buffer[i * 8 + 4], w25qxx_buffer[i * 8 + 5], w25qxx_buffer[i * 8 + 6], w25qxx_buffer[i * 8 + 7],
+				w25qxx_buffer[i * 8 + 8], w25qxx_buffer[i * 8 + 9], w25qxx_buffer[i * 8 + 10], w25qxx_buffer[i * 8 + 11],
+				w25qxx_buffer[i * 8 + 12], w25qxx_buffer[i * 8 + 13], w25qxx_buffer[i * 8 + 14], w25qxx_buffer[i * 8 + 15]);
+		}
+	}
+	
+	
+
+
 
 	/*RCC_ClkInitTypeDef clkConfig;
 	uint32_t frq;

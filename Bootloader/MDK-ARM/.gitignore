@@ -13,3 +13,12 @@
 # eide template
 *.ept
 *.eide-template
+
+Bootloader.uvguix.*
+Bootloader/Bootloader.axf
+Bootloader/Bootloader.build_log.htm
+Bootloader/Bootloader.hex
+Bootloader/Bootloader.htm
+Bootloader/Bootloader.map
+Bootloader/Bootloader_Bootloader.dep
+JLinkLog.txt

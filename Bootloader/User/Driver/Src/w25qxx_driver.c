@@ -186,7 +186,7 @@ end:
 	return ret;
 }
 
-W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer)
+W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer, uint32_t len)
 {
 	if (flash == NULL) {
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
@@ -195,33 +195,37 @@ W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffe
 
 	W25Qxx_Status ret = W25Qxx_Error;
 	page_addr *= flash->PageSize;
+	if (len > flash->PageSize) {
+		W25Qxx_ERROR("read data length %d big than max size: %d", len, flash->PageSize);
+		goto end;
+	}
 
 	FLASH_CS_LOW();
 
 	static char read_cmd[5] = {0};
 
 	read_cmd[0] = W25QXX_READ_DATA_CMD;
-	uint32_t len;
+	uint32_t cmd_len;
 	if (flash->Type >= W25Q256) {
 		read_cmd[1] = (uint8_t)(page_addr >> 24);
 		read_cmd[2] = (uint8_t)(page_addr >> 16);
 		read_cmd[3] = (uint8_t)(page_addr >> 8);
 		read_cmd[4] = (uint8_t)(page_addr);
-		len = 5;
+		cmd_len = 5;
 	} else {
 		read_cmd[1] = (uint8_t)(page_addr >> 16);
 		read_cmd[2] = (uint8_t)(page_addr >> 8);
 		read_cmd[3] = (uint8_t)(page_addr);
-		len = 4;
+		cmd_len = 4;
 	}
 
-	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)read_cmd, len, 100) != HAL_OK) {
+	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)read_cmd, cmd_len, 100) != HAL_OK) {
 		W25Qxx_ERROR("Send Read Data Cmd Fail");
 		ret = W25Qxx_Error;
 		goto end;
 	}
 
-	if (HAL_SPI_Receive(&FLASH_SPI, buffer, flash->PageSize, 100) != HAL_OK) {
+	if (HAL_SPI_Receive(&FLASH_SPI, buffer, len, 100) != HAL_OK) {
 		W25Qxx_ERROR("Read Page Data Error");
 		ret = W25Qxx_Error;
 		goto end;
@@ -234,14 +238,76 @@ end:
 	return ret;
 }
 
-W25Qxx_Status w25qxx_erase_sector(W25Qxx *flash, uint32_t sector_addr)
+W25Qxx_Status w25qxx_write_page(W25Qxx *flash, uint32_t page_addr, const uint8_t* buffer, uint32_t len)
 {
 	if (flash == NULL) {
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
 		return W25Qxx_Error;
 	}
 
+	W25Qxx_Status ret = W25Qxx_Error;
+	page_addr *= flash->PageSize;
+	if (len > flash->PageSize) {
+		W25Qxx_ERROR("write data length %d big than max size: %d", len, flash->PageSize);
+		goto end;
+	}
+	
+	if (w25qxx_write_enable()) {
+		W25Qxx_ERROR("send write enable signal fail");
+		goto end;
+	}
+
+	FLASH_CS_LOW();
+
+	static char write_cmd[5] = {0};
+
+	write_cmd[0] = W25QXX_WRITE_DATA_CMD;
+	uint32_t cmd_len;
+	if (flash->Type >= W25Q256) {
+		write_cmd[1] = (uint8_t)(page_addr >> 24);
+		write_cmd[2] = (uint8_t)(page_addr >> 16);
+		write_cmd[3] = (uint8_t)(page_addr >> 8);
+		write_cmd[4] = (uint8_t)(page_addr);
+		cmd_len = 5;
+	} else {
+		write_cmd[1] = (uint8_t)(page_addr >> 16);
+		write_cmd[2] = (uint8_t)(page_addr >> 8);
+		write_cmd[3] = (uint8_t)(page_addr);
+		cmd_len = 4;
+	}
+
+	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)write_cmd, cmd_len, 100) != HAL_OK) {
+		W25Qxx_ERROR("send write data cmd fail");
+		ret = W25Qxx_Error;
+		goto end;
+	}
+
+	if (HAL_SPI_Transmit(&FLASH_SPI, buffer, len, 100)) {
+		W25Qxx_ERROR("write page data error");
+		ret = W25Qxx_Error;
+		goto end;
+	}
+
+	ret = W25Qxx_OK;
+
+end:
+
+	FLASH_CS_HIGH();
 	w25qxx_wait_busy(flash, 0);
+	return ret;
+}
+
+W25Qxx_Status w25qxx_erase_sector(W25Qxx *flash, uint32_t sector_addr)
+{
+	if (flash == NULL) {
+		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
+		return W25Qxx_Error;
+	}
+	
+	uint32_t start_tick = HAL_GetTick();
+
+	w25qxx_wait_busy(flash, 0);
+	w25qxx_write_enable();
 
 	W25Qxx_Status ret = W25Qxx_Error;
 	sector_addr *= flash->SectorSize;
@@ -272,7 +338,7 @@ W25Qxx_Status w25qxx_erase_sector(W25Qxx *flash, uint32_t sector_addr)
 	}
 	ret = W25Qxx_OK;
 end:
-
+	W25Qxx_DEBUG("erase sector use %d ms", HAL_GetTick() - start_tick);
 	FLASH_CS_HIGH();
 	w25qxx_wait_busy(flash, 0);
 	return ret;

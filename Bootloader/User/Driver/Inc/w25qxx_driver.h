@@ -21,6 +21,7 @@ extern "C" {
 
 #define FLASH_SPI hspi1
 
+#define W25QXX_WRITE_DATA_CMD		0x02
 #define W25QXX_READ_DATA_CMD 		0x03
 #define W25QXX_WRITE_ENABLE_CMD		0x06
 #define W25QXX_WRITE_DISABLE_CMD	0x04
@@ -146,13 +147,43 @@ typedef struct{
 	}StatusRegister3;
 #endif
 }W25Qxx;
- 
+
+/**
+ * @brief read device id
+ * 
+ * @param flash 
+ * @return W25Qxx_Status 
+ */
 W25Qxx_Status w25qxx_read_id(W25Qxx *flash);
+
+/**
+ * @brief read jedec id
+ * 
+ * @param flash 
+ * @return W25Qxx_Status 
+ */
 W25Qxx_Status w25qxx_read_JEDEC_id(W25Qxx *flash);
 
+/**
+ * @brief w25qxx init
+ * 
+ * @param flash 
+ * @return W25Qxx_Status 
+ */
 W25Qxx_Status w25qxx_init(W25Qxx *flash);
 
+/**
+ * @brief w25qxx write enable
+ * 
+ * @return W25Qxx_Status 
+ */
 W25Qxx_Status w25qxx_write_enable(void);
+
+/**
+ * @brief w5qxx write disable
+ * 
+ * @return W25Qxx_Status 
+ */
 W25Qxx_Status w25qxx_write_disable(void);
 
 /**
@@ -172,7 +203,17 @@ W25Qxx_Status w25qxx_read_status_register(W25Qxx *flash, uint8_t id);
  * @param flash 
  * @return W25Qxx_Status 
  */
-W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer);
+W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer, uint32_t len);
+
+/**
+ * @brief write w25qxx data
+ * 
+ * @param flash 
+ * @param page_addr 
+ * @param buffer 
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_write_page(W25Qxx *flash, uint32_t page_addr, const uint8_t* buffer, uint32_t len);
 
 /**
  * @brief erase w25qxx sector
