@@ -859,7 +859,7 @@ void W25qxx_ReadBytes(uint8_t *pBuffer, uint32_t ReadAddr, uint32_t NumByteToRea
 }
 //###################################################################################################################
 void W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize)
-{
+{ 
 	while (w25qxx.Lock == 1)
 		W25qxx_Delay(1);
 	w25qxx.Lock = 1;

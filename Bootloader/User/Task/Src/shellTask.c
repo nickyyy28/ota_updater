@@ -7,6 +7,7 @@
 #include <string.h>
 #include "usart.h"
 #include "w25qxx_driver.h"
+//#include "w25qxx_4M.h"
 #include "soft_i2c.h"
 #include "eeprom_at24c256.h"
 #include "oled_ssd1306_1_3.h"
@@ -15,20 +16,28 @@ W25Qxx flash1 = {0};
 
 extern void FileTest(void);
 
+char msg_info[20] = {0};
+
 void show_msg(Command_t *cmd)
 {
 	int var1 = 0;
 	float var2 = 0.0f;
+	char ch = ' ';
+	memset(msg_info, 0, 20);
 	command_get_param_value(cmd, "fvar", &var2);
 	command_get_param_value(cmd, "ivar", &var1);
+	command_get_param_value(cmd, "strvar", &msg_info);
+	command_get_param_value(cmd, "cvar", &ch);
 
-	LOG_INFO("show ivar=%d, fvar=%f", var1, var2);
+	LOG_INFO("show ivar=%d, fvar=%f, ch = %c", var1, var2, ch);
+	LOG_INFO("str value = %s", msg_info);
 	osDelay(1);
 }
 
 void cmd_setled(Command_t *cmd)
 {
 	uint8_t led = 0;
+	
 	command_get_param_value(cmd, "led1", &led);
 	if (led) {
 		//HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
@@ -122,7 +131,54 @@ void cmd_spi(Command_t *cmd)
 
 uint8_t eeprom_str[64] = {0};
 
-uint8_t w25qxx_buffer[256] = {0};
+uint8_t w25qxx_read_buffer[256] = {0};
+uint8_t w25qxx_write_buffer[256] = {0};
+
+void cmd_test_write(Command_t *cmd)
+{
+	uint32_t page_addr = 0;
+	memset(w25qxx_write_buffer, 0, 256);
+	if (param_is_configured(cmd, "page") && param_is_configured(cmd, "str")) {
+		command_get_param_value(cmd, "page", &page_addr);
+		command_get_param_value(cmd, "str", &w25qxx_write_buffer);
+		LOG_INFO("writing \"%s\" on page %d without erase", w25qxx_write_buffer, page_addr);
+		w25qxx_write_page(&flash1, page_addr, w25qxx_write_buffer, strlen((const char*)w25qxx_write_buffer));
+	} else {
+		LOG_WARNING("command test_write lack of param");
+	}
+}
+
+void cmd_test_read(Command_t *cmd)
+{
+	uint32_t page_addr = 0;
+	uint32_t len = 0;
+	memset(w25qxx_read_buffer, 0, 256);
+	if (param_is_configured(cmd, "page") && param_is_configured(cmd, "len")) {
+		command_get_param_value(cmd, "page", &page_addr);
+		command_get_param_value(cmd, "len", &len);
+		LOG_INFO("reading data on page %d", page_addr);
+		w25qxx_read_page(&flash1, page_addr, w25qxx_read_buffer, len);
+		for (int i = 0 ; i < 16 ; i++) {
+			LOG_DEBUG("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", 
+				w25qxx_read_buffer[i * 8 + 0], w25qxx_read_buffer[i * 8 + 1], w25qxx_read_buffer[i * 8 + 2], w25qxx_read_buffer[i * 8 + 3],
+				w25qxx_read_buffer[i * 8 + 4], w25qxx_read_buffer[i * 8 + 5], w25qxx_read_buffer[i * 8 + 6], w25qxx_read_buffer[i * 8 + 7],
+				w25qxx_read_buffer[i * 8 + 8], w25qxx_read_buffer[i * 8 + 9], w25qxx_read_buffer[i * 8 + 10], w25qxx_read_buffer[i * 8 + 11],
+				w25qxx_read_buffer[i * 8 + 12], w25qxx_read_buffer[i * 8 + 13], w25qxx_read_buffer[i * 8 + 14], w25qxx_read_buffer[i * 8 + 15]);
+		}
+	} else {
+		LOG_WARNING("command test_read lack of param");
+	}
+}
+
+void cmd_test_erase(Command_t *cmd)
+{
+	uint32_t sector_addr = 0;
+	if (param_is_configured(cmd, "sector")) {
+		command_get_param_value(cmd, "sector", &sector_addr);
+		LOG_INFO("erasing sector %d", sector_addr);
+		w25qxx_erase_sector(&flash1, sector_addr);
+	}
+}
 
 void cmd_filetest(Command_t *cmd)
 {
@@ -135,17 +191,38 @@ void cmd_filetest(Command_t *cmd)
 	w25qxx_read_status_register(&flash1, 2);
 	w25qxx_read_status_register(&flash1, 3);
 
+
 	LOG_INFO("reg1: %X, reg2: %X, reg3: %X", flash1.StatusRegister1.buffer, flash1.StatusRegister2.buffer, flash1.StatusRegister3.buffer);
 
 	uint8_t ret = 0;
 	LOG_DEBUG("erasing sector 0");
-	ret = w25qxx_erase_sector(&flash1, 0);
+	//ret = w25qxx_erase_sector(&flash1, 0);
 	
-	ret = w25qxx_write_page(&flash1, 0, "hello world", 11);
+	//ret = w25qxx_write_page(&flash1, 0, "hello world", 11);
 	
-	
+	ret = w25qxx_read_page(&flash1, 0, w25qxx_read_buffer, 256);
+	LOG_DEBUG("ret = %d", ret);
+	for (int i = 0 ; i < 16 ; i++) {
+		LOG_DEBUG("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", 
+			w25qxx_read_buffer[i * 8 + 0], w25qxx_read_buffer[i * 8 + 1], w25qxx_read_buffer[i * 8 + 2], w25qxx_read_buffer[i * 8 + 3],
+			w25qxx_read_buffer[i * 8 + 4], w25qxx_read_buffer[i * 8 + 5], w25qxx_read_buffer[i * 8 + 6], w25qxx_read_buffer[i * 8 + 7],
+			w25qxx_read_buffer[i * 8 + 8], w25qxx_read_buffer[i * 8 + 9], w25qxx_read_buffer[i * 8 + 10], w25qxx_read_buffer[i * 8 + 11],
+			w25qxx_read_buffer[i * 8 + 12], w25qxx_read_buffer[i * 8 + 13], w25qxx_read_buffer[i * 8 + 14], w25qxx_read_buffer[i * 8 + 15]);
+	}
 
-	for (int page_index = 0 ; page_index < 32 ; page_index++) {
+	/*W25qxx_Init();
+	memset(w25qxx_buffer, 0, 256);
+	W25qxx_ReadPage(w25qxx_buffer, 0, 0, 256);
+	LOG_DEBUG("other read:");
+	for (int i = 0 ; i < 16 ; i++) {
+		LOG_DEBUG("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", 
+			w25qxx_buffer[i * 8 + 0], w25qxx_buffer[i * 8 + 1], w25qxx_buffer[i * 8 + 2], w25qxx_buffer[i * 8 + 3],
+			w25qxx_buffer[i * 8 + 4], w25qxx_buffer[i * 8 + 5], w25qxx_buffer[i * 8 + 6], w25qxx_buffer[i * 8 + 7],
+			w25qxx_buffer[i * 8 + 8], w25qxx_buffer[i * 8 + 9], w25qxx_buffer[i * 8 + 10], w25qxx_buffer[i * 8 + 11],
+			w25qxx_buffer[i * 8 + 12], w25qxx_buffer[i * 8 + 13], w25qxx_buffer[i * 8 + 14], w25qxx_buffer[i * 8 + 15]);
+	}*/
+
+	/*for (int page_index = 0 ; page_index < 32 ; page_index++) {
 		ret = w25qxx_read_page(&flash1, 1, w25qxx_buffer, 256);
 		LOG_DEBUG("ret = %d", ret);
 		LOG_DEBUG("read page: %d data: ", page_index);
@@ -156,7 +233,7 @@ void cmd_filetest(Command_t *cmd)
 				w25qxx_buffer[i * 8 + 8], w25qxx_buffer[i * 8 + 9], w25qxx_buffer[i * 8 + 10], w25qxx_buffer[i * 8 + 11],
 				w25qxx_buffer[i * 8 + 12], w25qxx_buffer[i * 8 + 13], w25qxx_buffer[i * 8 + 14], w25qxx_buffer[i * 8 + 15]);
 		}
-	}
+	}*/
 	
 	
 
@@ -191,17 +268,37 @@ void shell_task(void* param)
 	IIC_Init();
 	osDelay(100);
 	OLED_Init();
+	w25qxx_init(&flash1);
 	//W25qxx_Init();
 	//MX_USB_DEVICE_Init();
 	Command_t *cmd = register_command("show", show_msg);
 	if (cmd != NULL) {
 		command_add_param(cmd, "fvar", TYPE_FLOAT);
 		command_add_param(cmd, "ivar", TYPE_INT);
+		command_add_param(cmd, "strvar", TYPE_STRING);
+		command_add_param(cmd, "cvar", TYPE_CHAR);
 	}
 	
 	cmd = register_command("setled", cmd_setled);
 	if (cmd != NULL) {
 		command_add_param(cmd, "led1", TYPE_BOOL);
+	}
+	
+	cmd = register_command("test_write", cmd_test_write);
+	if (cmd != NULL) {
+		command_add_param(cmd, "page", TYPE_INT);
+		command_add_param(cmd, "str", TYPE_STRING);
+	}
+	
+	cmd = register_command("test_read", cmd_test_read);
+	if (cmd != NULL) {
+		command_add_param(cmd, "page", TYPE_INT);
+		command_add_param(cmd, "len", TYPE_INT);
+	}
+	
+	cmd = register_command("test_erase", cmd_test_erase);
+	if (cmd != NULL) {
+		command_add_param(cmd, "sector", TYPE_INT);
 	}
 	
 	/*cmd = register_command("spiflash", cmd_spiflash);

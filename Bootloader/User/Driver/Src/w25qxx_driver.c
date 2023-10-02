@@ -238,6 +238,34 @@ end:
 	return ret;
 }
 
+W25Qxx_Status w25qxx_read_sector(W25Qxx *flash, uint32_t sector_addr, uint8_t *buffer, uint32_t len)
+{
+	if (flash == NULL) {
+		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
+		return W25Qxx_Error;
+	}
+
+	W25Qxx_Status ret = W25Qxx_Error;
+	uint32_t base_page_addr = sector_addr * 16;
+	sector_addr *= flash->SectorSize;
+	if (len > flash->SectorSize) {
+		W25Qxx_ERROR("read data length %d big than max size: %d", len, flash->SectorSize);
+		goto end;
+	}
+
+	for (uint32_t index = 0 ; index < len ; index += flash->PageSize) {
+		if (w25qxx_read_page(flash, base_page_addr, buffer + index, ((len - index > 256) ? 256 : (len - index)))) {
+			LOG_ERROR("read page %d occured error", base_page_addr);
+			goto end;
+		}
+		base_page_addr ++;
+	}
+
+	ret = W25Qxx_OK;
+end:
+	return ret;
+}
+
 W25Qxx_Status w25qxx_write_page(W25Qxx *flash, uint32_t page_addr, const uint8_t* buffer, uint32_t len)
 {
 	if (flash == NULL) {
@@ -280,7 +308,7 @@ W25Qxx_Status w25qxx_write_page(W25Qxx *flash, uint32_t page_addr, const uint8_t
 		W25Qxx_ERROR("send write data cmd fail");
 		ret = W25Qxx_Error;
 		goto end;
-	}
+	} 
 
 	if (HAL_SPI_Transmit(&FLASH_SPI, buffer, len, 100)) {
 		W25Qxx_ERROR("write page data error");
@@ -294,6 +322,34 @@ end:
 
 	FLASH_CS_HIGH();
 	w25qxx_wait_busy(flash, 0);
+	return ret;
+}
+
+W25Qxx_Status w25qxx_write_sector(W25Qxx *flash, uint32_t sector_addr, const uint8_t* buffer, uint32_t len)
+{
+	if (flash == NULL) {
+		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
+		return W25Qxx_Error;
+	}
+
+	W25Qxx_Status ret = W25Qxx_Error;
+	uint32_t base_page_addr = sector_addr * 16;
+	sector_addr *= flash->SectorSize;
+	if (len > flash->SectorSize) {
+		W25Qxx_ERROR("write data length %d big than max size: %d", len, flash->SectorSize);
+		goto end;
+	}
+
+	for (uint32_t index = 0 ; index < len ; index += flash->PageSize) {
+		if (w25qxx_write_page(flash, base_page_addr, buffer + index, ((len - index > 256) ? 256 : (len - index)))) {
+			LOG_ERROR("write page %d occured error", base_page_addr);
+			goto end;
+		}
+		base_page_addr ++;
+	}
+
+	ret = W25Qxx_OK;
+end:
 	return ret;
 }
 

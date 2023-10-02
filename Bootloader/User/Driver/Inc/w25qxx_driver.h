@@ -206,7 +206,7 @@ W25Qxx_Status w25qxx_read_status_register(W25Qxx *flash, uint8_t id);
 W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffer, uint32_t len);
 
 /**
- * @brief write w25qxx data
+ * @brief write w25qxx data on page
  * 
  * @param flash 
  * @param page_addr 
@@ -214,6 +214,28 @@ W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffe
  * @return W25Qxx_Status 
  */
 W25Qxx_Status w25qxx_write_page(W25Qxx *flash, uint32_t page_addr, const uint8_t* buffer, uint32_t len);
+
+/**
+ * @brief read w25qxx sector data
+ * 
+ * @param flash 
+ * @param sector_addr 
+ * @param buffer 
+ * @param len 
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_read_sector(W25Qxx *flash, uint32_t sector_addr, uint8_t *buffer, uint32_t len);
+
+/**
+ * @brief write w25qxx data on sector
+ * 
+ * @param flash 
+ * @param sector_addr 
+ * @param buffer 
+ * @param len 
+ * @return W25Qxx_Status 
+ */
+W25Qxx_Status w25qxx_write_sector(W25Qxx *flash, uint32_t sector_addr, const uint8_t* buffer, uint32_t len);
 
 /**
  * @brief erase w25qxx sector

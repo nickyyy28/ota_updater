@@ -112,11 +112,12 @@ void command_get_param_value(Command_t *cmd, const char* param_name, void *value
 				CASES(uint32_t, UINT32HEX, "0x%x");
 				CASES(uint64_t, UINT64HEX, "0x%llx");
 				case TYPE_STRING: {
-					if (strlen(param->value) == 0) {
+					/*if (strlen(param->value) == 0) {
 						value = NULL;
 					} else {
 						*(int*)value = (int)&param->value;
-					}
+					}*/
+					memcpy(value, param->value, strlen(param->value));
 					break;
 				}
 				case TYPE_NONE: 
