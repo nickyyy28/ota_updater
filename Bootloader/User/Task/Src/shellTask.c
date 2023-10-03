@@ -14,7 +14,7 @@
 
 W25Qxx flash1 = {0};
 
-extern void FileTest(void);
+extern void FileTest(void); 
 
 char msg_info[20] = {0};
 
@@ -157,14 +157,15 @@ void cmd_test_read(Command_t *cmd)
 		command_get_param_value(cmd, "page", &page_addr);
 		command_get_param_value(cmd, "len", &len);
 		LOG_INFO("reading data on page %d", page_addr);
-		w25qxx_read_page(&flash1, page_addr, w25qxx_read_buffer, len);
-		for (int i = 0 ; i < 16 ; i++) {
+		w25qxx_read_page(&flash1, page_addr, w25qxx_read_buffer, len); 
+		/*for (int i = 0 ; i < 16 ; i++) {
 			LOG_DEBUG("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", 
 				w25qxx_read_buffer[i * 8 + 0], w25qxx_read_buffer[i * 8 + 1], w25qxx_read_buffer[i * 8 + 2], w25qxx_read_buffer[i * 8 + 3],
 				w25qxx_read_buffer[i * 8 + 4], w25qxx_read_buffer[i * 8 + 5], w25qxx_read_buffer[i * 8 + 6], w25qxx_read_buffer[i * 8 + 7],
 				w25qxx_read_buffer[i * 8 + 8], w25qxx_read_buffer[i * 8 + 9], w25qxx_read_buffer[i * 8 + 10], w25qxx_read_buffer[i * 8 + 11],
 				w25qxx_read_buffer[i * 8 + 12], w25qxx_read_buffer[i * 8 + 13], w25qxx_read_buffer[i * 8 + 14], w25qxx_read_buffer[i * 8 + 15]);
-		}
+		}*/
+		LOG_INFO("read str: %s", w25qxx_read_buffer);
 	} else {
 		LOG_WARNING("command test_read lack of param");
 	}

@@ -146,7 +146,7 @@ typedef struct{
 		}reg;
 	}StatusRegister3;
 #endif
-}W25Qxx;
+} W25Qxx;
 
 /**
  * @brief read device id
