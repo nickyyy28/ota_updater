@@ -183,8 +183,8 @@ void cmd_test_erase(Command_t *cmd)
 
 void cmd_filetest(Command_t *cmd)
 {
-	//FileTest();
-	w25qxx_read_id(&flash1);
+	FileTest();
+	/*w25qxx_read_id(&flash1);
 	LOG_DEBUG("-------------------------");
 	w25qxx_read_JEDEC_id(&flash1);
 	LOG_DEBUG("-------------------------");
@@ -196,12 +196,12 @@ void cmd_filetest(Command_t *cmd)
 	LOG_INFO("reg1: %X, reg2: %X, reg3: %X", flash1.StatusRegister1.buffer, flash1.StatusRegister2.buffer, flash1.StatusRegister3.buffer);
 
 	uint8_t ret = 0;
-	LOG_DEBUG("erasing sector 0");
+	LOG_DEBUG("erasing sector 0");*/
 	//ret = w25qxx_erase_sector(&flash1, 0);
 	
 	//ret = w25qxx_write_page(&flash1, 0, "hello world", 11);
 	
-	ret = w25qxx_read_page(&flash1, 0, w25qxx_read_buffer, 256);
+	/*ret = w25qxx_read_page(&flash1, 0, w25qxx_read_buffer, 256);
 	LOG_DEBUG("ret = %d", ret);
 	for (int i = 0 ; i < 16 ; i++) {
 		LOG_DEBUG("0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X", 
@@ -209,7 +209,7 @@ void cmd_filetest(Command_t *cmd)
 			w25qxx_read_buffer[i * 8 + 4], w25qxx_read_buffer[i * 8 + 5], w25qxx_read_buffer[i * 8 + 6], w25qxx_read_buffer[i * 8 + 7],
 			w25qxx_read_buffer[i * 8 + 8], w25qxx_read_buffer[i * 8 + 9], w25qxx_read_buffer[i * 8 + 10], w25qxx_read_buffer[i * 8 + 11],
 			w25qxx_read_buffer[i * 8 + 12], w25qxx_read_buffer[i * 8 + 13], w25qxx_read_buffer[i * 8 + 14], w25qxx_read_buffer[i * 8 + 15]);
-	}
+	}*/
 
 	/*W25qxx_Init();
 	memset(w25qxx_buffer, 0, 256);
@@ -249,9 +249,9 @@ void cmd_filetest(Command_t *cmd)
 	//LOG_INFO("writing string to eeprom");
 	//eeprom_write_str(0xA0, 0, 0, "test", 4);
 	//osDelay(100);
-	LOG_INFO("reading string from eeprom");
-	eeprom_read_page(0xA0, 0, 0, eeprom_str, 4);
-	LOG_INFO("read str %s", eeprom_str);
+	//LOG_INFO("reading string from eeprom");
+	//eeprom_read_page(0xA0, 0, 0, eeprom_str, 4);
+	//LOG_INFO("read str %s", eeprom_str);
 	
 	/*OLED_Init();
 	LOG_INFO("OLED Init...");

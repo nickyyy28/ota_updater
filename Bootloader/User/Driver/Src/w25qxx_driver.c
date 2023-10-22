@@ -192,6 +192,8 @@ W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffe
 		W25Qxx_ERROR("%s:%d flash is null", __FILE__, __LINE__);
 		return W25Qxx_Error;
 	}
+	
+	uint32_t start_time = HAL_GetTick();
 
 	W25Qxx_Status ret = W25Qxx_Error;
 	page_addr *= flash->PageSize;
@@ -225,16 +227,23 @@ W25Qxx_Status w25qxx_read_page(W25Qxx *flash, uint32_t page_addr, uint8_t* buffe
 		goto end;
 	}
 
-	if (HAL_SPI_Receive(&FLASH_SPI, buffer, len, 100) != HAL_OK) {
+	/*if (HAL_SPI_Receive(&FLASH_SPI, buffer, len, 1000) != HAL_OK) {
 		W25Qxx_ERROR("Read Page Data Error");
 		ret = W25Qxx_Error;
 		goto end;
+	}*/
+	
+	for (uint32_t i = 0 ; i < len ; i++) {
+		uint8_t ret = W25Qxx_SPI_TransmitReceive(0xFF);
+		buffer[i] = ret;
 	}
+	
 	ret = W25Qxx_OK;
 end:
 
 	FLASH_CS_HIGH();
-
+	start_time = HAL_GetTick() - start_time;
+	LOG_DEBUG("read page: %d total %d bytes cost %d ms", page_addr, len, start_time);
 	return ret;
 }
 
@@ -304,13 +313,13 @@ W25Qxx_Status w25qxx_write_page(W25Qxx *flash, uint32_t page_addr, const uint8_t
 		cmd_len = 4;
 	}
 
-	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)write_cmd, cmd_len, 100) != HAL_OK) {
+	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)write_cmd, cmd_len, 1000) != HAL_OK) {
 		W25Qxx_ERROR("send write data cmd fail");
 		ret = W25Qxx_Error;
 		goto end;
 	} 
 
-	if (HAL_SPI_Transmit(&FLASH_SPI, buffer, len, 100)) {
+	if (HAL_SPI_Transmit(&FLASH_SPI, buffer, len, 1000)) {
 		W25Qxx_ERROR("write page data error");
 		ret = W25Qxx_Error;
 		goto end;
@@ -387,7 +396,7 @@ W25Qxx_Status w25qxx_erase_sector(W25Qxx *flash, uint32_t sector_addr)
 		len = 4;
 	}
 
-	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)read_cmd, len, 100) != HAL_OK) {
+	if (HAL_SPI_Transmit(&FLASH_SPI, (const uint8_t*)read_cmd, len, 1000) != HAL_OK) {
 		W25Qxx_ERROR("send erase cmd fail");
 		ret = W25Qxx_Error;
 		goto end;
@@ -424,14 +433,14 @@ W25Qxx_Status w25qxx_read_status_register(W25Qxx *flash, uint8_t id)
 			goto end;
 	}
 
-	if (HAL_SPI_Transmit(&FLASH_SPI, &cmd, 1, 100) != HAL_OK) {
+	if (HAL_SPI_Transmit(&FLASH_SPI, &cmd, 1, 1000) != HAL_OK) {
 		W25Qxx_ERROR("send read status register %d command fail", cmd);
 		ret = W25Qxx_Error;
 		goto end;
 	}
 
 
-	if (HAL_SPI_Receive(&FLASH_SPI, reg, 1, 100) != HAL_OK) {
+	if (HAL_SPI_Receive(&FLASH_SPI, reg, 1, 1000) != HAL_OK) {
 		W25Qxx_ERROR("receive register data %d fail", cmd);
 		ret = W25Qxx_Error;
 		goto end;

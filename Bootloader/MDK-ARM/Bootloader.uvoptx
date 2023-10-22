@@ -135,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>d</Name>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -157,57 +157,56 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>182</LineNumber>
+          <LineNumber>70</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134259432</Address>
+          <Address>134231656</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\USER\Desktop\ota_updater\Bootloader\User\Service\Src\w25qxx.c</Filename>
+          <Filename>../FATFS/Target/user_diskio.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Bootloader\../User/Service/Src/w25qxx.c\182</Expression>
+          <Expression>\\Bootloader\../FATFS/Target/user_diskio.c\70</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>1194</LineNumber>
+          <LineNumber>5366</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134245368</Address>
+          <Address>134267854</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c</Filename>
+          <Filename>../Middlewares/Third_Party/FatFs/src/ff.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Bootloader\../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c\1194</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>1182</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134245276</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Bootloader\../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c\1182</Expression>
+          <Expression>\\Bootloader\../Middlewares/Third_Party/FatFs/src/ff.c\5366</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>uwTick</ItemText>
+          <ItemText>uwTick,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>w25qxx_read_buffer</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>b_vol</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ss,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -510,7 +509,7 @@
 
   <Group>
     <GroupName>Drivers/STM32H7xx_HAL_Driver</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -838,7 +837,7 @@
 
   <Group>
     <GroupName>Middlewares/FatFs</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
