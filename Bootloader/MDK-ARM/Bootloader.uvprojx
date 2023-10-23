@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../USB_DEVICE/App;../USB_DEVICE/Target;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FatFs/src;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../User/Service/Inc;../User/Task/Inc;../User/Boot/Inc;../User/Driver/Inc</IncludePath>
+              <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../USB_DEVICE/App;../USB_DEVICE/Target;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FatFs/src;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../User/Service/Inc;../User/Task/Inc;../User/Boot/Inc;../User/Driver/Inc;..\..\public\include;..\..\ota_client\include\packet</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -962,6 +962,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Service\Src\ring_buffer.c</FilePath>
             </File>
+            <File>
+              <FileName>iap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Service\Src\iap.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -971,6 +976,11 @@
               <FileName>shellTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Task\Src\shellTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>otaTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Task\Src\otaTask.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1001,6 +1011,16 @@
               <FileName>oled_ssd1306_1_3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Driver\Src\oled_ssd1306_1_3.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ext</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\public\src\bsp_crc.c</FilePath>
             </File>
           </Files>
         </Group>

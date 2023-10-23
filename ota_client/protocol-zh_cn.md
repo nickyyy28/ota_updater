@@ -16,7 +16,7 @@
 struct FRAME_HEAD {
     uint8_t header1;		//0xAB
     uint8_t header2;		//0xCD
-    uint8_t transport_type;	//0为控制消息，1为数据消息
+    uint8_t transport_type;	//0为主动消息，1为反馈消息
     uint32_t data_length;	//数据帧
     uint8_t crc8;			//帧头CRC8
 }__attribute__((packed));
@@ -45,7 +45,7 @@ struct DATA_TAIL {
 
 ## 二. 设备到客户端
 
-### 2.1 控制消息
+### 2.1 主动发送消息
 
 #### 2-1-1 检测客户端心跳消息(0x001)
 
@@ -90,7 +90,7 @@ struct MSG_REQ_FIRMWARE_INFO {
 |  0字节   |
 
 
-### 2.2 数据消息
+### 2.2 收到请求响应消息
 
 #### 2-2-1  报告当前固件文件信息(0x010)
 
@@ -113,3 +113,17 @@ struct REPORT_CUR_FIRMWARE_INFO {       //0x010
 
 
 ## 三. 客户端到设备
+
+### 3.1 收到请求响应消息
+
+#### 3-1-1 响应客户端心跳消息 (0x101)
+
+#### 3-1-2 返回新固件信息(0x102)
+
+#### 3-1-3 响应发送新固件第n个分包(0x103)
+
+#### 3-1-4 返回当前日期时间(0x105)
+
+### 3.2 主动发送消息
+
+#### 3-2-1 请求当前固件文件信息(0x110)
