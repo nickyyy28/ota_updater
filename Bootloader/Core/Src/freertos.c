@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "shellTask.h"
 #include "uni_shell.h"
+#include "otaTask.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,11 +48,19 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 osThreadId_t shellTaskHandle;
+osThreadId_t otaTaskHandle;
 const osThreadAttr_t shellTask_attributes = {
   .name = "shellTask",
   .stack_size = 128 * 16,
   .priority = (osPriority_t) osPriorityNormal,
 };
+
+const osThreadAttr_t otaTask_attr = {
+	.name = "otaTask",
+	.stack_size = 128 * 8,
+	.priority = (osPriority_t) osPriorityNormal,
+};
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -104,6 +113,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 	shellTaskHandle = osThreadNew(shell_task, NULL, &shellTask_attributes);
+	otaTaskHandle = osThreadNew(ota_task, NULL, &otaTask_attr);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

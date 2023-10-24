@@ -5,12 +5,12 @@
 
 struct RECV_MSGID2Service{
     uint32_t MSG_ID;
-    uint8_t (*service)(uint32_t msg_id, void *buffer);
+    uint8_t (*service)(uint32_t msg_id, PacketBuffer *recv_buffer);
 };
 
 struct SEND_MSGID2Service{
     uint32_t MSG_ID;
-    uint8_t (*service)(uint32_t msg_id, void *buffer);
+    uint8_t (*service)(uint32_t msg_id, PacketBuffer *send_buffer);
 };
 
 #define RECV_IAP_MAP(msg_id, name)  struct RECV_MSGID2Service name
@@ -37,5 +37,7 @@ typedef struct{
 
 #undef RECV_IAP_MAP
 #undef SEND_IAP_MAP
+
+void iap_loop(void);
 
 #endif //__IAP_H
