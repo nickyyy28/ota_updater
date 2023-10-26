@@ -12,7 +12,7 @@ extern "C" {
 struct FRAME_HEAD {
     uint8_t header1;		//0xAB
     uint8_t header2;		//0xCD
-    uint8_t transport_type;	//0为控制消息，1为数据消息
+    uint8_t transport_type;	//0为主动消息，1为反馈消息
     uint32_t data_length;	//数据帧
     uint8_t crc8;           //帧头CRC8
 }__attribute__((packed));

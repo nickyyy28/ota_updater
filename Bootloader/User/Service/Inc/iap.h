@@ -3,6 +3,8 @@
 
 #include "Device2Client.h"
 
+#define IAP_UART_RX_BUFFER_SIZE     512
+
 struct RECV_MSGID2Service{
     uint32_t MSG_ID;
     uint8_t (*service)(uint32_t msg_id, PacketBuffer *recv_buffer);
@@ -39,5 +41,7 @@ typedef struct{
 #undef SEND_IAP_MAP
 
 void iap_loop(void);
+
+void iap_send_test(void);
 
 #endif //__IAP_H
