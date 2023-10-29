@@ -11,7 +11,10 @@
 #include "soft_i2c.h"
 #include "eeprom_at24c256.h"
 #include "oled_ssd1306_1_3.h"
+#include "Device2Client.h"
+#include "queue.h"
 
+extern QueueHandle_t ota_cmd_queue;
 W25Qxx flash1 = {0};
 
 extern void FileTest(void); 
@@ -125,6 +128,29 @@ void cmd_spi(Command_t *cmd)
 		}
 	}
 
+}
+
+void cmd_ota_test(Command_t *cmd)
+{
+	BaseType_t ret;
+	uint16_t ota_cmd;
+	if (param_is_configured(cmd, "cmd")) {
+		command_get_param_value(cmd, "cmd", &ota_cmd);
+		if (!MSG_ID_CHECK(ota_cmd)) {
+			LOG_ERROR("cmd %hx not exist", ota_cmd);
+			return;
+		}
+		LOG_DEBUG("sending ota cmd: 0x%04hx to queue", ota_cmd);
+		ret = xQueueSendToBack(ota_cmd_queue, &ota_cmd, 100);
+		if (pdPASS != ret) {
+			LOG_ERROR("ota queue send failure");
+			return;
+		} else {
+			LOG_INFO("ota queue send success");
+		}
+	} else {
+		LOG_WARNING("param <cmd> is not configured");
+	}
 }
 
 #include "w25qxx_driver.h"
@@ -305,6 +331,11 @@ void shell_task(void* param)
 		command_add_param(cmd, "sector", TYPE_INT);
 	}
 	
+	cmd = register_command("ota_test", cmd_ota_test);
+	if (cmd != NULL) {
+		command_add_param(cmd, "cmd", TYPE_UINT16HEX);
+	}
+
 	/*cmd = register_command("spiflash", cmd_spiflash);
 	if (cmd != NULL) {
 		command_add_param(cmd, "readid", TYPE_BOOL);

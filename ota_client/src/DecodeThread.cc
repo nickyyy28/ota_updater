@@ -1,6 +1,7 @@
 #include "DecodeThread.h"
 #include "packet/Device2Client.h"
 #include <QDebug>
+#include <qdebug.h>
 namespace ota_client {
 
 DecodeThread::DecodeThread(QObject* parent, SerialDecoder::ptr decoder)
@@ -25,6 +26,9 @@ void DecodeThread::run()
         bool ret = false;
         do {
             ret = m_decoder->decodeOnce(head, buffer);
+            if (ret) {
+                qDebug() << "msg id: " << head.msg_id << " sequence: " << head.SEQ;
+            }
         } while (ret == true);
     }
 }

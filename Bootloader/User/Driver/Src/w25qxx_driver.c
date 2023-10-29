@@ -1,5 +1,4 @@
 #include "w25qxx_driver.h"
-
 #include "spi.h"
 #include "uni_shell.h"
 

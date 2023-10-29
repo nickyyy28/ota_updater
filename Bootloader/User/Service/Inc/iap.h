@@ -5,40 +5,45 @@
 
 #define IAP_UART_RX_BUFFER_SIZE     512
 
-struct RECV_MSGID2Service{
-    uint32_t MSG_ID;
-    uint8_t (*service)(uint32_t msg_id, PacketBuffer *recv_buffer);
-};
+// struct RECV_MSGID2Service{
+//     uint32_t MSG_ID;
+//     uint8_t (*service)(uint32_t msg_id, PacketBuffer *recv_buffer);
+// };
 
-struct SEND_MSGID2Service{
-    uint32_t MSG_ID;
-    uint8_t (*service)(uint32_t msg_id, PacketBuffer *send_buffer);
-};
+// struct SEND_MSGID2Service{
+//     uint32_t MSG_ID;
+//     uint8_t (*service)(uint32_t msg_id, PacketBuffer *send_buffer);
+// };
 
-#define RECV_IAP_MAP(msg_id, name)  struct RECV_MSGID2Service name
-#define SEND_IAP_MAP(msg_id, name)  struct SEND_MSGID2Service name
+// #define RECV_IAP_MAP(msg_id, name)  struct RECV_MSGID2Service name
+// #define SEND_IAP_MAP(msg_id, name)  struct SEND_MSGID2Service name
 
-typedef struct{
-    RECV_IAP_MAP(0x101, onRecvResponseKeepAlive);
-    RECV_IAP_MAP(0x102, onRecvResponseNewFirmwareInfo);
-    RECV_IAP_MAP(0x103, onRecvResponseTheNPacket);
-    RECV_IAP_MAP(0x105, onRecvResponseNowUTCTime);
-    RECV_IAP_MAP(0x110, onRecvRequestOldFirmwareInfo);
-}IAP_Recv_Service;
+// typedef struct{
+//     RECV_IAP_MAP(0x101, onRecvResponseKeepAlive);
+//     RECV_IAP_MAP(0x102, onRecvResponseNewFirmwareInfo);
+//     RECV_IAP_MAP(0x103, onRecvResponseTheNPacket);
+//     RECV_IAP_MAP(0x105, onRecvResponseNowUTCTime);
+//     RECV_IAP_MAP(0x110, onRecvRequestOldFirmwareInfo);
+// }IAP_Recv_Service;
 
+// typedef struct{
+//     SEND_IAP_MAP(0x001, onSendRequestKeepAlive);
+//     SEND_IAP_MAP(0x002, onSendRequestNewFirmwareInfo);
+//     SEND_IAP_MAP(0x003, onSendRequestTheNPacket);
+//     SEND_IAP_MAP(0x004, onSendReportNPacketOK);
+//     SEND_IAP_MAP(0x005, onSendRequestNowUTCTime);
+//     SEND_IAP_MAP(0x010, onSendResponseOldFirmwareInfo);
+// }IAP_Send_Service;
 
+// #undef RECV_IAP_MAP
+// #undef SEND_IAP_MAP
 
-typedef struct{
-    SEND_IAP_MAP(0x001, onSendRequestKeepAlive);
-    SEND_IAP_MAP(0x002, onSendRequestNewFirmwareInfo);
-    SEND_IAP_MAP(0x003, onSendRequestTheNPacket);
-    SEND_IAP_MAP(0x004, onSendReportNPacketOK);
-    SEND_IAP_MAP(0x005, onSendRequestNowUTCTime);
-    SEND_IAP_MAP(0x010, onSendResponseOldFirmwareInfo);
-}IAP_Send_Service;
-
-#undef RECV_IAP_MAP
-#undef SEND_IAP_MAP
+uint8_t SendRequestKeepAlive();
+uint8_t SendRequestNewFirmwareInfo();
+uint8_t SendRequestTheNPacket(uint32_t firmware_seq);
+uint8_t SendReportNPacketOK(uint32_t firmware_seq);
+uint8_t SendRequestNowUTCTime();
+uint8_t SendResponseOldFirmwareInfo(const char *device_name, uint32_t version, uint32_t update_timestamp, const char *manufacturer, const char *description, uint32_t size, uint16_t crc16);
 
 void iap_loop(void);
 
