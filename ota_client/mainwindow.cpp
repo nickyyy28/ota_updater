@@ -5,10 +5,13 @@
 #include <memory>
 #include <qcombobox.h>
 #include <qdebug.h>
+#include <qfiledialog.h>
 #include <qpushbutton.h>
 #include <QDebug>
+#include <QFileDialog>
 #include <qserialportinfo.h>
 #include <qtimer.h>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -56,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_decoder->setBaudRate(115200);
 
+    ui->lineEdit->setReadOnly(true);
+
     connect(ui->combo_boundrate, &QComboBox::currentTextChanged, [this](const QString& baudrate){
         m_decoder->setBaudRate(ui->combo_boundrate->currentText().toInt());
     });
@@ -77,7 +82,22 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(ui->btn_read_firmware_info, &QPushButton::clicked, [this](){
-        m_decoder->testPost();
+        // m_decoder->testPost();
+        // qDebug() << "aaaaaaaa";
+    });
+
+    connect(ui->btn_set_firmware_path, &QPushButton::clicked, [this](){
+        // QFileDialog *dialog = new QFileDialog(this);
+        // dialog->setWindowTitle("固件路径");
+        // dialog->setFileMode(QFileDialog::AnyFile);
+        // dialog->setViewMode(QFileDialog::Detail);
+        // dialog->setFilter(tr("Firmware Files(*.bin)"));
+        QString firmware_name = QFileDialog::getOpenFileName(this, tr("固件路径"), "C:/", tr("bin files(*.bin);;All files(*.*)"));
+        if (firmware_name.isEmpty()) {
+            QMessageBox::warning(this, "Warning!", "File Not Exist!");
+        } else {
+            this->ui->lineEdit->setText(firmware_name);
+        }
     });
 
     m_decode_thread = new ota_client::DecodeThread(this, m_decoder);
