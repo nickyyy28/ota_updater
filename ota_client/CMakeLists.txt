@@ -26,6 +26,9 @@ endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/public/include)
+
+include_directories(${PROJECT_SOURCE_DIR}/github/nlohmann/include)
+
 message(${CMAKE_SOURCE_DIR}/public/include)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets SerialPort REQUIRED)

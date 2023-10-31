@@ -11,6 +11,7 @@
 #include <QFileDialog>
 #include <qserialportinfo.h>
 #include <qtimer.h>
+#include "nlohmann/json.hpp"
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -60,6 +61,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_decoder->setBaudRate(115200);
 
     ui->lineEdit->setReadOnly(true);
+    ui->edit_r_firmware_crc16->setReadOnly(true);
+    ui->edit_r_firmware_size->setReadOnly(true);
+    ui->edit_r_log->setReadOnly(true);
 
     connect(ui->combo_boundrate, &QComboBox::currentTextChanged, [this](const QString& baudrate){
         m_decoder->setBaudRate(ui->combo_boundrate->currentText().toInt());
@@ -97,6 +101,12 @@ MainWindow::MainWindow(QWidget *parent)
             QMessageBox::warning(this, "Warning!", "File Not Exist!");
         } else {
             this->ui->lineEdit->setText(firmware_name);
+            QFile bin_file(firmware_name);
+            if (bin_file.open(QIODevice::ReadOnly)) {
+                QByteArray all_data = bin_file.readAll();
+                qDebug() << all_data.size();
+                bin_file.close();
+            }
         }
     });
 
