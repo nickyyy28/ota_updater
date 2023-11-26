@@ -12,3 +12,7 @@ _deps
 build/
 .cache/
 ota_client/build*/
+.idea/
+cmake-build-debug/
+ota_client/.idea/
+ota_client/cmake-build-debug/
