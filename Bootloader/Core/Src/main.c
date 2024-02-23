@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "dma.h"
 #include "fatfs.h"
+#include "fdcan.h"
 #include "spi.h"
 #include "usart.h"
 #include "usb_device.h"
@@ -28,7 +29,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "bsp_fdcan.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,9 +70,9 @@ void MX_FREERTOS_Init(void);
 void SCL_Set_Pin(uint8_t pinset)
 {
 	if (pinset) {
-		HAL_GPIO_WritePin(SOFT_IIC_SCL_GPIO_Port, SOFT_IIC_SCL_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(SOFT_IIC_SCK_GPIO_Port, SOFT_IIC_SCK_Pin, GPIO_PIN_SET);
 	} else {
-		HAL_GPIO_WritePin(SOFT_IIC_SCL_GPIO_Port, SOFT_IIC_SCL_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(SOFT_IIC_SCK_GPIO_Port, SOFT_IIC_SCK_Pin, GPIO_PIN_RESET);
 	}
 }
 
@@ -99,7 +100,7 @@ void SCL_OUT()
 {
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = SOFT_IIC_SCL_Pin;
+	GPIO_InitStruct.Pin = SOFT_IIC_SCK_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -117,6 +118,7 @@ uint32_t get_cpu_frq(void)
 	HAL_RCC_GetClockConfig(&clkConfig, FLASH_LATENCY_0);
 	return HAL_RCC_GetSysClockFreq();
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -157,8 +159,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_FATFS_Init();
   MX_SPI1_Init();
+  MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
-
+	FDCAN_Filter_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

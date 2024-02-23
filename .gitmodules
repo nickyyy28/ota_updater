@@ -1,3 +1,6 @@
 [submodule "ota_server/github/Siempre"]
 	path = ota_server/github/Siempre
 	url = https://github.com/nickyyy28/Siempre.git
+[submodule "ota_client/github/nlohmann"]
+	path = ota_client/github/nlohmann
+	url = https://github.com/nlohmann/json.git

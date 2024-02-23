@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "uni_shell.h"
 
-#define RING_BUFFER_MAX_SIZE 	512
+#define RING_BUFFER_MAX_SIZE 	1024
 
 typedef struct {
 	uint8_t buffer[RING_BUFFER_MAX_SIZE];

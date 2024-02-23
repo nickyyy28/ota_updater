@@ -219,6 +219,15 @@
         ]
       },
       {
+        "name": "ext",
+        "files": [
+          {
+            "path": "../../public/src/bsp_crc.c"
+          }
+        ],
+        "folders": []
+      },
+      {
         "name": "Middlewares",
         "files": [],
         "folders": [
@@ -328,6 +337,9 @@
             "name": "Service",
             "files": [
               {
+                "path": "../User/Service/Src/iap.c"
+              },
+              {
                 "path": "../User/Service/Src/ring_buffer.c"
               },
               {
@@ -345,6 +357,9 @@
           {
             "name": "Task",
             "files": [
+              {
+                "path": "../User/Task/Src/otaTask.c"
+              },
               {
                 "path": "../User/Task/Src/shellTask.c"
               }
@@ -533,7 +548,9 @@
           "RTE/_Bootloader",
           ".eide/deps",
           "../User/Boot/Inc",
-          "../User/Driver/Inc"
+          "../User/Driver/Inc",
+          "../../public/include",
+          "../../ota_client/include/packet"
         ],
         "libList": [],
         "sourceDirList": [],

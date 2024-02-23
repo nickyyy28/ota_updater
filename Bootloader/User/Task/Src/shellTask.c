@@ -11,7 +11,10 @@
 #include "soft_i2c.h"
 #include "eeprom_at24c256.h"
 #include "oled_ssd1306_1_3.h"
+#include "Device2Client.h"
+#include "queue.h"
 
+extern QueueHandle_t ota_cmd_queue;
 W25Qxx flash1 = {0};
 
 extern void FileTest(void); 
@@ -127,6 +130,29 @@ void cmd_spi(Command_t *cmd)
 
 }
 
+void cmd_ota_test(Command_t *cmd)
+{
+	BaseType_t ret;
+	uint16_t ota_cmd;
+	if (param_is_configured(cmd, "cmd")) {
+		command_get_param_value(cmd, "cmd", &ota_cmd);
+		if (!MSG_ID_CHECK(ota_cmd)) {
+			LOG_ERROR("cmd %hx not exist", ota_cmd);
+			return;
+		}
+		LOG_DEBUG("sending ota cmd: 0x%04hx to queue", ota_cmd);
+		ret = xQueueSendToBack(ota_cmd_queue, &ota_cmd, 100);
+		if (pdPASS != ret) {
+			LOG_ERROR("ota queue send failure");
+			return;
+		} else {
+			LOG_INFO("ota queue send success");
+		}
+	} else {
+		LOG_WARNING("param <cmd> is not configured");
+	}
+}
+
 #include "w25qxx_driver.h"
 
 uint8_t eeprom_str[64] = {0};
@@ -183,7 +209,7 @@ void cmd_test_erase(Command_t *cmd)
 
 void cmd_filetest(Command_t *cmd)
 {
-	FileTest();
+	//FileTest();
 	/*w25qxx_read_id(&flash1);
 	LOG_DEBUG("-------------------------");
 	w25qxx_read_JEDEC_id(&flash1);
@@ -246,12 +272,15 @@ void cmd_filetest(Command_t *cmd)
 	frq = HAL_RCC_GetSysClockFreq();
 	LOG_DEBUG("CPU Frq %d Hz", frq);*/
 	
-	//LOG_INFO("writing string to eeprom");
-	//eeprom_write_str(0xA0, 0, 0, "test", 4);
-	//osDelay(100);
-	//LOG_INFO("reading string from eeprom");
-	//eeprom_read_page(0xA0, 0, 0, eeprom_str, 4);
-	//LOG_INFO("read str %s", eeprom_str);
+	LOG_INFO("writing string to eeprom");
+	uint32_t start = HAL_GetTick();
+	eeprom_write_str(0xA0, 0, 0, "test", 4);
+	start = HAL_GetTick() - start;
+	LOG_INFO("write cost %d ms", start);
+	osDelay(100);
+	LOG_INFO("reading string from eeprom");
+	eeprom_read_page(0xA0, 0, 0, eeprom_str, 4);
+	LOG_INFO("read str %s", eeprom_str);
 	
 	/*OLED_Init();
 	LOG_INFO("OLED Init...");
@@ -302,6 +331,11 @@ void shell_task(void* param)
 		command_add_param(cmd, "sector", TYPE_INT);
 	}
 	
+	cmd = register_command("ota_test", cmd_ota_test);
+	if (cmd != NULL) {
+		command_add_param(cmd, "cmd", TYPE_UINT16HEX);
+	}
+
 	/*cmd = register_command("spiflash", cmd_spiflash);
 	if (cmd != NULL) {
 		command_add_param(cmd, "readid", TYPE_BOOL);

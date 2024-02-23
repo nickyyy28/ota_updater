@@ -27,6 +27,9 @@
 /* USER CODE BEGIN Includes */
 #include "shellTask.h"
 #include "uni_shell.h"
+#include "otaTask.h"
+#include "comTask.h"
+#include "queue.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,11 +50,29 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 osThreadId_t shellTaskHandle;
+osThreadId_t otaTaskHandle;
+osThreadId_t comTaskHandle;
 const osThreadAttr_t shellTask_attributes = {
   .name = "shellTask",
   .stack_size = 128 * 16,
   .priority = (osPriority_t) osPriorityNormal,
 };
+
+const osThreadAttr_t otaTask_attr = {
+	.name = "otaTask",
+	.stack_size = 128 * 8,
+	.priority = (osPriority_t) osPriorityNormal,
+};
+
+const osThreadAttr_t comTask_attr = {
+	.name = "commTask",
+	.stack_size = 128 * 8,
+	.priority = (osPriority_t) osPriorityHigh,
+};
+
+extern QueueHandle_t log_mutex;
+QueueHandle_t ota_cmd_queue;
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -83,6 +104,7 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+  log_mutex = xQueueCreateMutex(queueQUEUE_TYPE_MUTEX);
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -95,6 +117,8 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+  // osMessageQueueNew(10, 2, )
+  ota_cmd_queue = xQueueCreate(10, 2);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -104,6 +128,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 	shellTaskHandle = osThreadNew(shell_task, NULL, &shellTask_attributes);
+	otaTaskHandle = osThreadNew(ota_task, NULL, &otaTask_attr);
+	comTaskHandle = osThreadNew(comTask, NULL, &comTask_attr);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

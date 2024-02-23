@@ -2,14 +2,16 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "usart.h"
-
 #include <cmsis_os.h>
+#include "queue.h"
 
 #ifdef USE_CACHE
 __attribute__((section(".RW_IRAM2"))) __attribute__((aligned(32)))  uint8_t usart_rx_buffer[RX_BUFFSIZE] = {0};
 #else
 __attribute__((aligned(32))) uint8_t usart_rx_buffer[RX_BUFFSIZE] = {0};
 #endif
+
+QueueHandle_t log_mutex;
 
 const static char log_level_str[][8] = {"DEBUG", "INFO", "WARNING", "ERROR", "FATAL"};
 const static char log_level_color[][8] = {CONSOLE_COLOR_BLUE, CONSOLE_COLOR_GREEN, CONSOLE_COLOR_YELLOW, CONSOLE_COLOR_RED, CONSOLE_COLOR_PURPLE};
@@ -551,10 +553,15 @@ void shell_init(void)
 	register_command("reboot", cmd_reboot);
 }
 
+static volatile uint8_t _mutex = 0;
+
 void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...)
 {
 	static char log_buffer[250] = {0}, raw_buffer[200] = {0};
-	
+	while(_mutex) {
+		osDelay(1);
+	}
+	_mutex = 1;
 	va_list args;
     va_start(args, fmt);
 	
@@ -574,6 +581,7 @@ void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...)
 	SET_CONSOLE_COLOR(log_level_color[level - 1]);
 	SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
 	RESUME_CONSOLE_COLOR();
+	_mutex = 0;
 }
 
 void SHELL_PRINTF(const char* fmt, ...)
@@ -619,6 +627,7 @@ void CDC_RECEIVE(uint8_t* src, uint32_t len)
 #if defined USE_USBCDC
 void CDC_Transmit_Packet(uint8_t *src, uint32_t len)
 {
+	//xQueueSemaphoreTake(log_mutex, portMAX_DELAY);
 	for (int i = 0 ; i < len ; i += USBCDC_MAX_PACKET_SIZE ) {
 		if (len - i >= USBCDC_MAX_PACKET_SIZE) {
 			CDC_Transmit_FS(src + i, USBCDC_MAX_PACKET_SIZE);
@@ -627,6 +636,7 @@ void CDC_Transmit_Packet(uint8_t *src, uint32_t len)
 		}
 		SHELL_DELAY(DELAY_TICK);
 	}
+	//xQueueGiveMutexRecursive(log_mutex);
 }
 #endif
 

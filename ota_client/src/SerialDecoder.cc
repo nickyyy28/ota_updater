@@ -6,9 +6,9 @@
 #include <qobject.h>
 #include <qserialport.h>
 #include <QDateTime>
-#include <stdint.h>
+#include <cstdint>
 #include <cstring>
-
+#include <QDebug>
 #include "bsp_crc.h"
 
 namespace ota_client {
@@ -83,25 +83,25 @@ bool SerialDecoder::decodeOnce(DATA_HEAD& head, PacketBuffer& buffer)
             m_recv.remove(0, 1);
             continue;
         }
-        if (size() <= sizeof(FRAME_HEAD) + sizeof(DATA_HEAD) + sizeof(DATA_TAIL)) {
+        if (size() < sizeof(FRAME_HEAD) + sizeof(DATA_HEAD) + sizeof(DATA_TAIL)) {
             //Data not receive complete
             return false;
         }
-        FRAME_HEAD frame_head;
+        FRAME_HEAD frame_head = {0};
         frame_head.header1 = head1;
         frame_head.header2 = head2;
         frame_head.transport_type = m_recv.at(2);
-        frame_head.data_length = *(uint32_t*)(m_recv.begin() + 4);
-        frame_head.crc8 = m_recv.at(5);
+        frame_head.data_length = *(uint32_t*)(m_recv.begin() + 3);
+        frame_head.crc8 = m_recv.at(sizeof(frame_head) - 1);
 
-        uint8_t head_crc8 = CRC8_calculate((uint8_t*)&frame_head, sizeof(frame_head), 0xFF);
+        uint8_t head_crc8 = CRC8_calculate((uint8_t*)&frame_head, sizeof(frame_head) - 1, 0xFF);
         if (head_crc8 != frame_head.crc8) {
             //head crc8 error
             m_recv.remove(0, sizeof(frame_head));
             continue;
         }
 
-        if (size() <= sizeof(FRAME_HEAD) + frame_head.data_length) {
+        if (size() < sizeof(FRAME_HEAD) + frame_head.data_length + sizeof(DATA_HEAD) + sizeof(DATA_TAIL)) {
             //Data not receive complete
             return false;
         }
@@ -109,12 +109,12 @@ bool SerialDecoder::decodeOnce(DATA_HEAD& head, PacketBuffer& buffer)
         head.SEQ = *(uint16_t*)(m_recv.begin() + sizeof(frame_head));
         head.msg_id = *(uint16_t*)(m_recv.begin() + sizeof(frame_head) + 2);
 
-        uint32_t body_length = frame_head.data_length - sizeof(DATA_HEAD) - sizeof(DATA_TAIL);
+        uint32_t body_length = frame_head.data_length;
         std::memcpy((void*)&buffer, (m_recv.begin() + sizeof(FRAME_HEAD) + sizeof(DATA_HEAD)), body_length);
 
-        DATA_TAIL tail;
+        DATA_TAIL tail = {0};
         tail.tail1 = m_recv.at(sizeof(FRAME_HEAD) + sizeof(DATA_HEAD) + body_length);
-        tail.tail1 = m_recv.at(sizeof(FRAME_HEAD) + sizeof(DATA_HEAD) + body_length + 1);
+        tail.tail2 = m_recv.at(sizeof(FRAME_HEAD) + sizeof(DATA_HEAD) + body_length + 1);
         tail.crc16 = *(uint16_t*)(m_recv.begin() + sizeof(FRAME_HEAD) + sizeof(DATA_HEAD) + body_length + 2);
 
         uint16_t data_crc16 = CRC16_calculate((uint8_t*)&frame_head, sizeof(frame_head), 0xFFFF);
@@ -123,10 +123,10 @@ bool SerialDecoder::decodeOnce(DATA_HEAD& head, PacketBuffer& buffer)
         data_crc16 = CRC16_calculate((uint8_t*)&tail, 2, data_crc16);
         if (data_crc16 == tail.crc16 && tail.tail1 == 0xEC && tail.tail2 == 0xED) {
             //Decode Success
-            m_recv.remove(0, sizeof(FRAME_HEAD) + frame_head.data_length);
+            m_recv.remove(0, (int)(sizeof(FRAME_HEAD) + frame_head.data_length + sizeof(DATA_HEAD) + sizeof(DATA_TAIL)));
             return true;
         } else {
-            m_recv.remove(0, sizeof(FRAME_HEAD) + frame_head.data_length);
+            m_recv.remove(0, (int)(sizeof(FRAME_HEAD) + frame_head.data_length + sizeof(DATA_HEAD) + sizeof(DATA_TAIL)));
             continue;
         }
     }
@@ -154,7 +154,10 @@ bool SerialDecoder::isOpen() const
 void SerialDecoder::readData()
 {
     std::lock_guard<std::mutex> lock(m_mtx);
+    uint32_t pre_size = size();
     m_recv.append(m_port->readAll());
+    pre_size = size() - pre_size;
+    qDebug() << "receive " << pre_size << " bytes data";
     post();
 }
 

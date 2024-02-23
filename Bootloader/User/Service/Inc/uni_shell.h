@@ -302,7 +302,7 @@ void SHELL_PRINTF(const char* fmt, ...);
 	LOG_ASSERT(__cond__, return, __fmt__, ##__VA_ARGS__)
 
 #define CRASH_ASSERT(__cond__, __fmt__, ...)	\
-	LOG_ASSERT(__cond__, int i = 1 / 0;, __fmt__, ##__VA_ARGS__)
+	LOG_ASSERT(__cond__, volatile int i = 1 / 0;, __fmt__, ##__VA_ARGS__)
 
 #if defined USE_USBCDC
 void CDC_Transmit_Packet(uint8_t *src, uint32_t len);
