@@ -6,6 +6,8 @@
 #include <string.h>
 #include "uni_shell.h"
 
+#include "usart.h"
+
 FDCAN_TxHeaderTypeDef txheader;
 uint8_t tx_buffer[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 uint8_t tx_reslut = 0;
@@ -35,6 +37,8 @@ void comTask(void *arg)
 			memcpy(tx_buffer, rx_buffer, sizeof(rx_buffer));
 			tx_reslut = FDCAN_transmit_msg(&hfdcan1, &txheader, tx_buffer);
 		}
+		
+		HAL_UART_Transmit(&huart1, "Into APP\r\n", 10, 10);
 		
 		osDelay(100);
 	}
