@@ -57,8 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SOFT_IIC_SCL_Pin GPIO_PIN_10
-#define SOFT_IIC_SCL_GPIO_Port GPIOE
+#define SOFT_IIC_SCK_Pin GPIO_PIN_10
+#define SOFT_IIC_SCK_GPIO_Port GPIOE
 #define SOFT_IIC_SDA_Pin GPIO_PIN_11
 #define SOFT_IIC_SDA_GPIO_Port GPIOE
 #define SPI1_CS_Pin GPIO_PIN_6
