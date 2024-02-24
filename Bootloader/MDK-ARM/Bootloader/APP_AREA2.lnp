@@ -10,6 +10,7 @@
 "bootloader\stm32h7xx_it.o"
 "bootloader\stm32h7xx_hal_msp.o"
 "bootloader\stm32h7xx_hal_timebase_tim.o"
+"bootloader\version.o"
 "bootloader\user_diskio.o"
 "bootloader\fatfs.o"
 "bootloader\usb_device.o"

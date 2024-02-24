@@ -16,6 +16,7 @@ FDCAN_RxHeaderTypeDef rxheader;
 uint8_t rx_buffer[8] = {0};
 uint8_t rx_reslut = 0;
 
+
 void comTask(void *arg)
 {
 	txheader.Identifier = 0x201;
@@ -37,9 +38,11 @@ void comTask(void *arg)
 			memcpy(tx_buffer, rx_buffer, sizeof(rx_buffer));
 			tx_reslut = FDCAN_transmit_msg(&hfdcan1, &txheader, tx_buffer);
 		}
-		
-		HAL_UART_Transmit(&huart1, "Into APP\r\n", 10, 10);
-		
+#ifdef USE_APP_AERA1
+		HAL_UART_Transmit(&huart1, "Into APP1\r\n", 11, 10);
+#elif defined USE_APP_AERA2
+		HAL_UART_Transmit(&huart1, "Into APP2\r\n", 11, 10);
+#endif
 		osDelay(100);
 	}
 }

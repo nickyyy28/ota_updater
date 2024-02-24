@@ -27,12 +27,19 @@ Project File Date:  02/24/2024
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'APP_AREA1'
-compiling system_stm32h7xx.c...
+compiling version.c...
+../Core/Inc/version.h(23): warning:  #1-D: last line of file ends without a newline
+  }Firmware_Version_Typedef;
+..\Core\Src\version.c(16): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Core\Src\version.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=64744 RO-data=2536 RW-data=968 ZI-data=40728  
+Program Size: Code=64744 RO-data=2620 RW-data=968 ZI-data=40728  
 FromELF: creating hex file...
 After Build - User command #1: fromelf  --bin  --output=Bootloader\APP_AREA1.bin  Bootloader\APP_AREA1.axf
-"Bootloader\APP_AREA1.axf" - 0 Error(s), 0 Warning(s).
+Error: Q0147E: Failed to create Directory Bootloader\APP_AREA1.bin\ER_IROM1: File exists
+Finished: 0 information, 0 warning and 1 error messages.
+"Bootloader\APP_AREA1.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -56,7 +63,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

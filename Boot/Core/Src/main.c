@@ -26,6 +26,9 @@
 /* USER CODE BEGIN Includes */
 #include <stdint.h>
 #include "boot.h"
+#include "version.h"
+#include <string.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +43,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define APP_AREA1_ADDRESS 0x08008000
+#define APP_AREA2_ADDRESS 0x08020000
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -57,15 +61,19 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define VERSION_ADDRESS 0x08040000
+
 uint32_t app_addr = 0x08008000;
 uint32_t count = 0;
+Firmware_Version_Typedef version = {0};
+char buffer[128] = {0};
 
 void Goto_APP()
 {
 	HAL_SPI_DeInit(&hspi1);
 	HAL_UART_DeInit(&huart1);
 	HAL_GPIO_DeInit(LED0_GPIO_Port, LED0_Pin);
-	boot_to(app_addr);
+	boot_to(APP_AREA2_ADDRESS);
 }
 
 /* USER CODE END 0 */
@@ -101,7 +109,27 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	memcpy(&version, (const void*)(VERSION_ADDRESS), sizeof(version));
+	
+	sprintf(buffer, "device name:%s\r\n", version.device_name);
+	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+	memset(buffer, 0, sizeof(buffer));
+	
+	sprintf(buffer, "version: %d.%d.%d\r\n", Get_Version_Major(version.Version), Get_Version_Minor(version.Version), Get_Version_Patch(version.Version));
+	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+	memset(buffer, 0, sizeof(buffer));
+	
+	sprintf(buffer, "timestamp: %d size: %d, crc16: %x\r\n", version.update_timestamp, version.size, version.crc16);
+	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+	memset(buffer, 0, sizeof(buffer));
+	
+	sprintf(buffer, "manufacturer: %s\r\n", version.manufacturer);
+	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+	memset(buffer, 0, sizeof(buffer));
+	
+	sprintf(buffer, "description: %s\r\n", version.description);
+	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+	memset(buffer, 0, sizeof(buffer));
   /* USER CODE END 2 */
 
   /* Infinite loop */
