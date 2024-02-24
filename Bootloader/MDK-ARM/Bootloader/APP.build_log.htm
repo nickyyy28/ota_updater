@@ -1,0 +1,273 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.32.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 11 1, 1, LIC=4ZLZX-HWPDR-79IG1-CS576-W8ZHV-ISF1I
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.32.0.0
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.32.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      UL2CM3.DLL V1.163.9.0
+Dialog DLL:      TCM.DLL V1.46.0.0
+ 
+<h2>Project:</h2>
+D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\APP.uvprojx
+Project File Date:  02/24/2024
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'APP'
+compiling stm32h7xx_hal_msp.c...
+compiling gpio.c...
+compiling spi.c...
+compiling dma.c...
+compiling fdcan.c...
+compiling usart.c...
+compiling stm32h7xx_it.c...
+compiling stm32h7xx_hal_timebase_tim.c...
+compiling freertos.c...
+../User/Task/Inc/otaTask.h(8): warning:  #1-D: last line of file ends without a newline
+  #endif // !__OTA_TASK_H
+../Core/Src/freertos.c: 1 warning, 0 errors
+compiling user_diskio.c...
+../FATFS/Target/user_diskio.c(108): warning:  #188-D: enumerated type mixed with another type
+  	res = f_size(&file);
+../FATFS/Target/user_diskio.c(247): warning:  #940-D: missing return statement at end of non-void function "USER_read" 
+  }
+../FATFS/Target/user_diskio.c(236): warning:  #177-D: variable "res"  was declared but never referenced
+  	DRESULT res = RES_ERROR;
+../FATFS/Target/user_diskio.c(309): warning:  #177-D: variable "res"  was declared but never referenced
+      DRESULT res = RES_ERROR;
+../FATFS/Target/user_diskio.c: 4 warnings, 0 errors
+compiling fatfs.c...
+compiling main.c...
+compiling usbd_desc.c...
+compiling stm32h7xx_hal_gpio.c...
+compiling stm32h7xx_hal_flash_ex.c...
+compiling stm32h7xx_hal_pcd.c...
+compiling stm32h7xx_hal_pcd_ex.c...
+compiling usb_device.c...
+compiling stm32h7xx_hal_flash.c...
+compiling usbd_cdc_if.c...
+compiling stm32h7xx_hal_rcc_ex.c...
+compiling stm32h7xx_hal_rcc.c...
+compiling stm32h7xx_ll_usb.c...
+compiling usbd_conf.c...
+compiling stm32h7xx_hal.c...
+compiling stm32h7xx_hal_pwr_ex.c...
+compiling stm32h7xx_hal_mdma.c...
+compiling stm32h7xx_hal_i2c_ex.c...
+compiling stm32h7xx_hal_fdcan.c...
+compiling stm32h7xx_hal_exti.c...
+compiling stm32h7xx_hal_pwr.c...
+compiling stm32h7xx_hal_hsem.c...
+compiling stm32h7xx_hal_dma_ex.c...
+compiling stm32h7xx_hal_cortex.c...
+compiling stm32h7xx_hal_i2c.c...
+compiling croutine.c...
+compiling event_groups.c...
+compiling list.c...
+compiling queue.c...
+compiling stream_buffer.c...
+compiling tasks.c...
+compiling timers.c...
+compiling stm32h7xx_hal_dma.c...
+compiling heap_4.c...
+compiling port.c...
+compiling cmsis_os2.c...
+compiling syscall.c...
+compiling stm32h7xx_hal_spi_ex.c...
+compiling stm32h7xx_hal_uart_ex.c...
+compiling usbd_core.c...
+compiling stm32h7xx_hal_uart.c...
+compiling soft_i2c.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\User\Service\Src\soft_i2c.c(52): warning:  #940-D: missing return statement at end of non-void function "IIC_SDA_Read_Pin" 
+  }
+..\User\Service\Src\soft_i2c.c: 2 warnings, 0 errors
+compiling ring_buffer.c...
+..\User\Service\Src\ring_buffer.c(43): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "int"
+          memchr(dst + temp, &buffer->buffer[0], len - temp);
+..\User\Service\Src\ring_buffer.c(70): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Service\Src\ring_buffer.c: 2 warnings, 0 errors
+compiling ff.c...
+compiling ff_gen_drv.c...
+compiling stm32h7xx_hal_tim_ex.c...
+compiling stm32h7xx_hal_spi.c...
+compiling diskio.c...
+compiling boot.c...
+../User/Boot/Inc/boot.h(9): warning:  #1-D: last line of file ends without a newline
+  #endif // !BOOTLOADER_H
+..\User\Boot\Src\boot.c(20): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Boot\Src\boot.c: 2 warnings, 0 errors
+compiling eeprom_at24c256.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\User\Driver\Src\eeprom_at24c256.c(12): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(17): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(23): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(28): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(33): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(38): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c: 7 warnings, 0 errors
+compiling stm32h7xx_hal_tim.c...
+compiling usbd_ioreq.c...
+compiling bsp_crc.c...
+..\..\public\src\bsp_crc.c(101): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\public\src\bsp_crc.c: 1 warning, 0 errors
+compiling usbd_ctlreq.c...
+compiling uni_shell.c...
+..\User\Service\Src\uni_shell.c(167): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "status"  (declared at line 177)
+            variable "key"  (declared at line 178)
+            variable "value"  (declared at line 179)
+            variable "tmp_index"  (declared at line 180)
+            variable "param"  (declared at line 181)
+  		goto err;
+  		^
+..\User\Service\Src\uni_shell.c(633): warning:  #223-D: function "CDC_Transmit_FS" declared implicitly
+  			CDC_Transmit_FS(src + i, USBCDC_MAX_PACKET_SIZE);
+..\User\Service\Src\uni_shell.c(635): warning:  #223-D: function "CDC_Transmit_FS" declared implicitly
+  			CDC_Transmit_FS(src + i, len - i);
+..\User\Service\Src\uni_shell.c(643): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\User\Service\Src\uni_shell.c: 4 warnings, 0 errors
+compiling comTask.c...
+..\User\Task\Src\comTask.c(45): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Task\Src\comTask.c: 1 warning, 0 errors
+compiling bsp_fdcan.c...
+..\User\Driver\Src\bsp_fdcan.c(47): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\bsp_fdcan.c: 1 warning, 0 errors
+compiling shellTask.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+..\User\Task\Src\shellTask.c(18): warning:  #188-D: enumerated type mixed with another type
+  W25Qxx flash1 = {0};
+..\User\Task\Src\shellTask.c: 3 warnings, 0 errors
+compiling iap.c...
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+../User/Service/Inc/iap.h(41): warning:  #1295-D: Deprecated declaration SendRequestKeepAlive - give arg types
+  uint8_t SendRequestKeepAlive();
+../User/Service/Inc/iap.h(42): warning:  #1295-D: Deprecated declaration SendRequestNewFirmwareInfo - give arg types
+  uint8_t SendRequestNewFirmwareInfo();
+../User/Service/Inc/iap.h(45): warning:  #1295-D: Deprecated declaration SendRequestNowUTCTime - give arg types
+  uint8_t SendRequestNowUTCTime();
+../User/Service/Inc/iap.h(52): warning:  #1-D: last line of file ends without a newline
+  #endif //__IAP_H
+..\User\Service\Src\iap.c(160): warning:  #1278-D: excess initializers are ignored
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c(160): warning:  #1278-D: excess initializers are ignored
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c(193): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Service\Src\iap.c(135): warning:  #177-D: function "RecvResponseKeepAlive"  was declared but never referenced
+  static uint8_t RecvResponseKeepAlive(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(140): warning:  #177-D: function "RecvResponseNewFirmwareInfo"  was declared but never referenced
+  static uint8_t RecvResponseNewFirmwareInfo(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(145): warning:  #177-D: function "RecvResponseTheNPacket"  was declared but never referenced
+  static uint8_t RecvResponseTheNPacket(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(150): warning:  #177-D: function "RecvResponseNowUTCTime"  was declared but never referenced
+  static uint8_t RecvResponseNowUTCTime(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(155): warning:  #177-D: function "RecvRequestOldFirmwareInfo"  was declared but never referenced
+  static uint8_t RecvRequestOldFirmwareInfo(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(160): warning:  #177-D: variable "recv"  was declared but never referenced
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c(160): warning:  #177-D: variable "send"  was declared but never referenced
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c: 15 warnings, 0 errors
+compiling usbd_cdc.c...
+compiling oled_ssd1306_1_3.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\User\Driver\Src\oled_ssd1306_1_3.c(238): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\oled_ssd1306_1_3.c: 2 warnings, 0 errors
+compiling otaTask.c...
+../User/Task/Inc/otaTask.h(8): warning:  #1-D: last line of file ends without a newline
+  #endif // !__OTA_TASK_H
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+../User/Service/Inc/iap.h(41): warning:  #1295-D: Deprecated declaration SendRequestKeepAlive - give arg types
+  uint8_t SendRequestKeepAlive();
+../User/Service/Inc/iap.h(42): warning:  #1295-D: Deprecated declaration SendRequestNewFirmwareInfo - give arg types
+  uint8_t SendRequestNewFirmwareInfo();
+../User/Service/Inc/iap.h(45): warning:  #1295-D: Deprecated declaration SendRequestNowUTCTime - give arg types
+  uint8_t SendRequestNowUTCTime();
+../User/Service/Inc/iap.h(52): warning:  #1-D: last line of file ends without a newline
+  #endif //__IAP_H
+..\User\Task\Src\otaTask.c(32): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Task\Src\otaTask.c: 7 warnings, 0 errors
+compiling w25qxx_4M.c...
+compiling w25qxx_driver.c...
+..\User\Driver\Src\w25qxx_driver.c(471): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\w25qxx_driver.c: 1 warning, 0 errors
+linking...
+Program Size: Code=64744 RO-data=2536 RW-data=968 ZI-data=40728  
+FromELF: creating hex file...
+"Bootloader\APP.axf" - 0 Error(s), 53 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.9.0.pack
+                ARM.CMSIS.5.9.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.6.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32H7xx_DFP.3.0.0.pack
+                Keil.STM32H7xx_DFP.3.0.0
+                STMicroelectronics STM32H7 Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_APP
+  D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include
+  D:\Keil_v5\ARM\PACK\Keil\STM32H7xx_DFP\3.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.6.0
+      Include file:  CMSIS\Core\Include\tz_context.h
+Build Time Elapsed:  00:02:52
+</pre>
+</body>
+</html>

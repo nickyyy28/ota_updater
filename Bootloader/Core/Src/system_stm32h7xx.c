@@ -87,7 +87,6 @@
      remap of boot address selected */
 /* #define USER_VECT_TAB_ADDRESS */
 
-#define USER_VECT_TAB_ADDRESS
 
 #if defined(USER_VECT_TAB_ADDRESS)
 #if defined(DUAL_CORE) && defined(CORE_CM4)
@@ -117,8 +116,13 @@
 #else
 #define VECT_TAB_BASE_ADDRESS   FLASH_BANK1_BASE  /*!< Vector Table base address field.
                                                        This value must be a multiple of 0x400. */
+#ifdef USE_APP_AERA1
 #define VECT_TAB_OFFSET         0x00008000U       /*!< Vector Table base offset field.
                                                        This value must be a multiple of 0x400. */
+#elif defined 	USE_APP_AERA2
+#define VECT_TAB_OFFSET         0x00020000U
+#endif
+
 #endif /* VECT_TAB_SRAM */
 #endif /* DUAL_CORE && CORE_CM4 */
 #endif /* USER_VECT_TAB_ADDRESS */
