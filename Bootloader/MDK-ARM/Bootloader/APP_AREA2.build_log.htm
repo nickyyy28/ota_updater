@@ -22,22 +22,63 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\APP.uvprojx
-Project File Date:  02/24/2024
+Project File Date:  02/26/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'APP_AREA2'
+Before Build - User command #1: ..\..\scripts\clean_target.exe USE_APP_AREA2 Bootloader
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\system_stm32h7xx.o
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\system_stm32h7xx.d
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\system_stm32h7xx.crf
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\version.o
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\version.d
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\version.crf
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\comTask.o
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\comTask.d
+remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\comTask.crf
+compiling version.c...
+../Core/Inc/version.h(23): warning:  #1-D: last line of file ends without a newline
+  }Firmware_Version_Typedef;
+..\Core\Src\version.c(17): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Core\Src\version.c: 2 warnings, 0 errors
+compiling system_stm32h7xx.c...
+compiling bsp_flash.c...
+..\User\Driver\Src\bsp_flash.c(37): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
+  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+..\User\Driver\Src\bsp_flash.c(55): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
+  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+..\User\Driver\Src\bsp_flash.c(72): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
+  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+..\User\Driver\Src\bsp_flash.c(89): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
+  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+..\User\Driver\Src\bsp_flash.c(97): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
+  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
+..\User\Driver\Src\bsp_flash.c(21): warning:  #177-D: variable "value"  was declared but never referenced
+  	uint32_t value = PROGRAM_FLAG_ENABLE;
+..\User\Driver\Src\bsp_flash.c(160): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\bsp_flash.c: 7 warnings, 0 errors
 compiling comTask.c...
 ..\User\Task\Src\comTask.c(48): warning:  #1-D: last line of file ends without a newline
   }
 ..\User\Task\Src\comTask.c: 1 warning, 0 errors
+compiling shellTask.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+..\User\Task\Src\shellTask.c(19): warning:  #188-D: enumerated type mixed with another type
+  W25Qxx flash1 = {0};
+..\User\Task\Src\shellTask.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=64744 RO-data=2536 RW-data=968 ZI-data=40728  
+Program Size: Code=65940 RO-data=2536 RW-data=968 ZI-data=41424  
 FromELF: creating hex file...
 After Build - User command #1: fromelf  --bin  --output=Bootloader\APP_AREA2.bin  Bootloader\APP_AREA2.axf
 Error: Q0108E: Could not create output file 'Bootloader\APP_AREA2.bin': Permission denied
 Finished: 0 information, 0 warning and 1 error messages.
-"Bootloader\APP_AREA2.axf" - 0 Error(s), 1 Warning(s).
+"Bootloader\APP_AREA2.axf" - 0 Error(s), 13 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -61,7 +102,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:10
 </pre>
 </body>
 </html>

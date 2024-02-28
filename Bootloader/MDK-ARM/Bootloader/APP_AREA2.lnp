@@ -75,6 +75,7 @@
 "bootloader\eeprom_at24c256.o"
 "bootloader\oled_ssd1306_1_3.o"
 "bootloader\bsp_fdcan.o"
+"bootloader\bsp_flash.o"
 "bootloader\bsp_crc.o"
 --strict --scatter "Bootloader\APP_AREA2.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

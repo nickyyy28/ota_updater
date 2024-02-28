@@ -35,7 +35,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "ff_gen_drv.h"
-//#include "w25qxx_4M.h"
+
 #include "w25qxx_driver.h"
 #include "uni_shell.h"
 /* Private typedef -----------------------------------------------------------*/
@@ -66,7 +66,7 @@ void FileTest(void)
     FRESULT res;  /* API result code */
 	BYTE mm[50];
 	UINT i;
-	LOG_DEBUG("文件系统测试�?�?.");
+	LOG_DEBUG("文件系统测试开始.");
 	res = f_mkfs("0:", FM_ANY, 0, work, sizeof work);
 	if (res) {
 		LOG_DEBUG("创建文件系统失败.");
@@ -99,11 +99,11 @@ void FileTest(void)
 	//uart_printf("res write:%d\r\n",res);
 	if (bw == 12)
 	{
-		LOG_DEBUG("写文件成�?!");
+		LOG_DEBUG("写文件成功!");
 	}
 	else
 	{
-		LOG_DEBUG("写文件失�?!");
+		LOG_DEBUG("写文件失败!");
 	}
 	res = f_size(&file);
 	LOG_DEBUG("文件大小:%d Bytes.",res);
@@ -127,12 +127,12 @@ void FileTest(void)
 	res = f_read(&file,mm,12,&i);
 	if (res == FR_OK)
 	{
-		LOG_DEBUG("读文件成�?!");
+		LOG_DEBUG("读文件成功!");
 		LOG_DEBUG("读到数据长度:%d Bytes.",i);
 	}
 	else
 	{
-		LOG_DEBUG("读文件失�?!");
+		LOG_DEBUG("读文件失败!");
 		return;
 	}
 	LOG_DEBUG("读到如下数据:%s", mm);

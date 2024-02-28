@@ -13,6 +13,7 @@
 #include "oled_ssd1306_1_3.h"
 #include "Device2Client.h"
 #include "queue.h"
+#include "bsp_flash.h"
 
 extern QueueHandle_t ota_cmd_queue;
 W25Qxx flash1 = {0};
@@ -35,6 +36,16 @@ void show_msg(Command_t *cmd)
 	LOG_INFO("show ivar=%d, fvar=%f, ch = %c", var1, var2, ch);
 	LOG_INFO("str value = %s", msg_info);
 	osDelay(1);
+}
+
+void cmd_enable_program(Command_t *cmd)
+{
+	FlashUpdateResult ret = set_program_flag(1);
+	if (ret) {
+		LOG_ERROR("erase internal flash fail");
+	} else {
+		LOG_INFO("erase internal flash success");
+	}
 }
 
 void cmd_setled(Command_t *cmd)
@@ -354,6 +365,8 @@ void shell_task(void* param)
 	}
 	
 	cmd = register_command("filetest", cmd_filetest);
+	
+	cmd = register_command("enable_reprogram", cmd_enable_program);
 	
 	extern uint8_t cli_rx_buffer[128];
 	extern uint8_t usart_rx_buffer[128];

@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -29,6 +30,7 @@
 #include "version.h"
 #include <string.h>
 #include <stdio.h>
+#include "bsp_flash.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,9 +68,17 @@ void SystemClock_Config(void);
 uint32_t app_addr = 0x08008000;
 uint32_t count = 0;
 Firmware_Version_Typedef version = {0};
-char buffer[128] = {0};
+static char buffer[128] = {0};
 
-void Goto_APP()
+void Goto_APP1()
+{
+	HAL_SPI_DeInit(&hspi1);
+	HAL_UART_DeInit(&huart1);
+	HAL_GPIO_DeInit(LED0_GPIO_Port, LED0_Pin);
+	boot_to(APP_AREA1_ADDRESS);
+}
+
+void Goto_APP2()
 {
 	HAL_SPI_DeInit(&hspi1);
 	HAL_UART_DeInit(&huart1);
@@ -108,6 +118,7 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 	memcpy(&version, (const void*)(VERSION_ADDRESS), sizeof(version));
 	
@@ -130,6 +141,21 @@ int main(void)
 	sprintf(buffer, "description: %s\r\n", version.description);
 	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
 	memset(buffer, 0, sizeof(buffer));
+	
+	if (program_flag_is_enable()) {
+		sprintf(buffer, "Enabled reprogram flag, goto app1");
+		HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);	
+		memset(buffer, 0, sizeof(buffer));
+		set_program_flag(0);
+		HAL_Delay(3000);
+		Goto_APP1();
+	} else {
+		sprintf(buffer, "Disabled reprogram flag, goto app2");
+		HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);	
+		memset(buffer, 0, sizeof(buffer));
+		HAL_Delay(3000);
+		Goto_APP2();
+	}
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -142,7 +168,7 @@ int main(void)
 	  count++;
 	  HAL_UART_Transmit(&huart1, "Into Boot\r\n", 11, 10);
 	  if (count == 20) {
-		Goto_APP();
+		Goto_APP2();
 	  }
 	  HAL_Delay(1000);
     /* USER CODE END WHILE */

@@ -1,6 +1,6 @@
 #include "version.h"
 
-#ifdef USE_APP_AERA1
+#ifdef USE_APP_AREA1
 
 __attribute__((at(0x08040000))) const Firmware_Version_Typedef firmware_info = {
 	.device_name = "STM32H7 OTA Demo",
@@ -12,6 +12,6 @@ __attribute__((at(0x08040000))) const Firmware_Version_Typedef firmware_info = {
 	.crc16 = 0
 };
 
-
+#elif defined USE_APP_AREA2
 
 #endif

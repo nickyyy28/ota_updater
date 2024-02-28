@@ -70,9 +70,9 @@
             <nStopU2X>0</nStopU2X>
           </BeforeCompile>
           <BeforeMake>
-            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name></UserProg1Name>
+            <UserProg1Name>..\..\scripts\clean_target.exe USE_APP_AREA1 Bootloader</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32H750xx,USER_VECT_TAB_ADDRESS,USE_APP_AERA1</Define>
+              <Define>USE_HAL_DRIVER,STM32H750xx,USER_VECT_TAB_ADDRESS,USE_APP_AREA1</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../USB_DEVICE/App;../USB_DEVICE/Target;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FatFs/src;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../User/Service/Inc;../User/Task/Inc;../User/Boot/Inc;../User/Driver/Inc;../../public/include;../../ota_client/include/packet</IncludePath>
             </VariousControls>
@@ -1139,6 +1139,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Driver\Src\bsp_fdcan.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Driver\Src\bsp_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1220,9 +1225,9 @@
             <nStopU2X>0</nStopU2X>
           </BeforeCompile>
           <BeforeMake>
-            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name></UserProg1Name>
+            <UserProg1Name>..\..\scripts\clean_target.exe USE_APP_AREA2 Bootloader</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -1487,7 +1492,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32H750xx,USER_VECT_TAB_ADDRESS,USE_APP_AERA2</Define>
+              <Define>USE_HAL_DRIVER,STM32H750xx,USER_VECT_TAB_ADDRESS,USE_APP_AREA2</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../USB_DEVICE/App;../USB_DEVICE/Target;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FatFs/src;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../User/Service/Inc;../User/Task/Inc;../User/Boot/Inc;../User/Driver/Inc;../../public/include;../../ota_client/include/packet</IncludePath>
             </VariousControls>
@@ -2288,6 +2293,11 @@
               <FileName>bsp_fdcan.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Driver\Src\bsp_fdcan.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Driver\Src\bsp_flash.c</FilePath>
             </File>
           </Files>
         </Group>

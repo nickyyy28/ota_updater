@@ -116,10 +116,10 @@
 #else
 #define VECT_TAB_BASE_ADDRESS   FLASH_BANK1_BASE  /*!< Vector Table base address field.
                                                        This value must be a multiple of 0x400. */
-#ifdef USE_APP_AERA1
+#ifdef USE_APP_AREA1
 #define VECT_TAB_OFFSET         0x00008000U       /*!< Vector Table base offset field.
                                                        This value must be a multiple of 0x400. */
-#elif defined 	USE_APP_AERA2
+#elif defined 	USE_APP_AREA2
 #define VECT_TAB_OFFSET         0x00020000U
 #endif
 
