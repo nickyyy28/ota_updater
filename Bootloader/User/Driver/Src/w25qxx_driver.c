@@ -1,8 +1,15 @@
 #include "w25qxx_driver.h"
-#include "spi.h"
-#include "uni_shell.h"
 
+#include "spi.h"
+
+#if USE_DEBUG
+
+#include "uni_shell.h"
 #include "cmsis_os.h"
+
+#endif
+
+
 
 #define FLASH_CS_LOW() HAL_GPIO_WritePin(FLASH_CS_GPIO_PORT, FLASH_CS_GPIO_PIN, GPIO_PIN_RESET)
 #define FLASH_CS_HIGH() HAL_GPIO_WritePin(FLASH_CS_GPIO_PORT, FLASH_CS_GPIO_PIN, GPIO_PIN_SET)
@@ -65,7 +72,7 @@ W25Qxx_Status w25qxx_read_id(W25Qxx *flash)
 		TYPE_CASE(0xEF18, W25Q256, 32 * 1024);
 		default:
 			status = W25Qxx_Error;
-			LOG_ERROR("Read W25Qxx ID %x, Not Found Type", flash->ID);
+			W25Qxx_ERROR("Read W25Qxx ID %x, Not Found Type", flash->ID);
 			goto end;
 	}
 	
@@ -126,7 +133,7 @@ W25Qxx_Status w25qxx_read_JEDEC_id(W25Qxx *flash)
 		TYPE_CASE(0xEF4019, W25Q256, 32 * 1024);
 		default:
 			status = W25Qxx_Error;
-			LOG_ERROR("Read W25Qxx JEDEC ID %x, Not Found Type", flash->JEDEC_ID);
+			W25Qxx_ERROR("Read W25Qxx JEDEC ID %x, Not Found Type", flash->JEDEC_ID);
 			goto end;
 	}
 
@@ -242,7 +249,8 @@ end:
 
 	FLASH_CS_HIGH();
 	start_time = HAL_GetTick() - start_time;
-	LOG_DEBUG("read page: %d total %d bytes cost %d ms", page_addr, len, start_time);
+	W25Qxx_DEBUG("read page: %d total %d bytes cost %d ms", page_addr, len, start_time);
+
 	return ret;
 }
 
@@ -263,7 +271,7 @@ W25Qxx_Status w25qxx_read_sector(W25Qxx *flash, uint32_t sector_addr, uint8_t *b
 
 	for (uint32_t index = 0 ; index < len ; index += flash->PageSize) {
 		if (w25qxx_read_page(flash, base_page_addr, buffer + index, ((len - index > 256) ? 256 : (len - index)))) {
-			LOG_ERROR("read page %d occured error", base_page_addr);
+			W25Qxx_ERROR("read page %d occured error", base_page_addr);
 			goto end;
 		}
 		base_page_addr ++;
@@ -350,7 +358,7 @@ W25Qxx_Status w25qxx_write_sector(W25Qxx *flash, uint32_t sector_addr, const uin
 
 	for (uint32_t index = 0 ; index < len ; index += flash->PageSize) {
 		if (w25qxx_write_page(flash, base_page_addr, buffer + index, ((len - index > 256) ? 256 : (len - index)))) {
-			LOG_ERROR("write page %d occured error", base_page_addr);
+			W25Qxx_ERROR("write page %d occured error", base_page_addr);
 			goto end;
 		}
 		base_page_addr ++;

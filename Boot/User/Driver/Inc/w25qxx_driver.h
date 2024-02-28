@@ -7,8 +7,9 @@ extern "C" {
 
 #include <stdint.h>
 
+#include "log.h"
 
-#define USE_DEBUG 	0
+#define USE_DEBUG 	1
 #define USED_RTOS	0
 
 #define __LITTLE_ENDIAN_ 	0

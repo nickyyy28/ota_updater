@@ -276,7 +276,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -725,6 +725,11 @@
               <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Service\Src\ring_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Service\Src\log.c</FilePath>
             </File>
           </Files>
         </Group>

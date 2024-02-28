@@ -220,7 +220,7 @@ void cmd_test_erase(Command_t *cmd)
 
 void cmd_filetest(Command_t *cmd)
 {
-	//FileTest();
+	FileTest();
 	/*w25qxx_read_id(&flash1);
 	LOG_DEBUG("-------------------------");
 	w25qxx_read_JEDEC_id(&flash1);
@@ -283,7 +283,7 @@ void cmd_filetest(Command_t *cmd)
 	frq = HAL_RCC_GetSysClockFreq();
 	LOG_DEBUG("CPU Frq %d Hz", frq);*/
 	
-	LOG_INFO("writing string to eeprom");
+	/*LOG_INFO("writing string to eeprom");
 	uint32_t start = HAL_GetTick();
 	eeprom_write_str(0xA0, 0, 0, "test", 4);
 	start = HAL_GetTick() - start;
@@ -291,7 +291,7 @@ void cmd_filetest(Command_t *cmd)
 	osDelay(100);
 	LOG_INFO("reading string from eeprom");
 	eeprom_read_page(0xA0, 0, 0, eeprom_str, 4);
-	LOG_INFO("read str %s", eeprom_str);
+	LOG_INFO("read str %s", eeprom_str);*/
 	
 	/*OLED_Init();
 	LOG_INFO("OLED Init...");

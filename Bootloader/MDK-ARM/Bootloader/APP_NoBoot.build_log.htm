@@ -43,16 +43,41 @@ compiling version.c...
 ..\Core\Src\version.c(17): warning:  #1-D: last line of file ends without a newline
   #endif
 ..\Core\Src\version.c: 2 warnings, 0 errors
-compiling system_stm32h7xx.c...
+compiling diskio.c...
+compiling syscall.c...
+compiling ff_gen_drv.c...
+compiling user_diskio.c...
+../FATFS/Target/user_diskio.c(69): warning:  #870-D: invalid multibyte character sequence
+  	LOG_DEBUG("文件系统测试开�?.");
+../FATFS/Target/user_diskio.c(102): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("写文件成�?!");
+../FATFS/Target/user_diskio.c(106): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("写文件失�?!");
+../FATFS/Target/user_diskio.c(108): warning:  #188-D: enumerated type mixed with another type
+  	res = f_size(&file);
+../FATFS/Target/user_diskio.c(130): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("读文件成�?!");
+../FATFS/Target/user_diskio.c(135): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("读文件失�?!");
+../FATFS/Target/user_diskio.c(247): warning:  #940-D: missing return statement at end of non-void function "USER_read" 
+  }
+../FATFS/Target/user_diskio.c(236): warning:  #177-D: variable "res"  was declared but never referenced
+  	DRESULT res = RES_ERROR;
+../FATFS/Target/user_diskio.c(309): warning:  #177-D: variable "res"  was declared but never referenced
+      DRESULT res = RES_ERROR;
+../FATFS/Target/user_diskio.c: 9 warnings, 0 errors
 compiling comTask.c...
 ..\User\Task\Src\comTask.c(48): warning:  #1-D: last line of file ends without a newline
   }
 ..\User\Task\Src\comTask.c: 1 warning, 0 errors
+compiling system_stm32h7xx.c...
+compiling ff.c...
+compiling fatfs.c...
+compiling main.c...
 linking...
-Program Size: Code=73696 RO-data=2624 RW-data=976 ZI-data=46608  
+Program Size: Code=74016 RO-data=2624 RW-data=976 ZI-data=53784  
 FromELF: creating hex file...
-After Build - User command #1: fromelf  --bin  --output=Bootloader\APP_AREA1.bin  Bootloader\APP_AREA1.axf
-"Bootloader\APP_AREA1.axf" - 0 Error(s), 3 Warning(s).
+"Bootloader\APP_NoBoot.axf" - 0 Error(s), 12 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -76,7 +101,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:07
+Build Time Elapsed:  00:00:41
 </pre>
 </body>
 </html>

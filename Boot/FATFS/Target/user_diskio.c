@@ -35,13 +35,112 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "ff_gen_drv.h"
-
+#include "w25qxx_driver.h"
+#include "log.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-
+#define PAGE_SIZE       256
+#define SECTOR_SIZE     4096
+#define SECTOR_COUNT	2048
+#define BLOCK_SIZE		65536
+#define BLOCK_COUNT		128
+#define FLASH_PAGES_PER_SECTOR	SECTOR_SIZE/PAGE_SIZE
 /* Private variables ---------------------------------------------------------*/
 /* Disk status */
+FATFS fs;
+FIL file;						  	/* 文件对象 */
+FRESULT f_res;                    	/* 文件操作结果 */
+UINT fnum;            				/* 文件成功读写数量 */
+BYTE ReadBuffer[1024]={0};        	/* 读缓冲区 */
+BYTE WriteBuffer[]= "WWB is the high hand\n";
+BYTE work[4096];
+UINT bw;
+char USER_Path[4];
+extern W25Qxx flash1;
 static volatile DSTATUS Stat = STA_NOINIT;
+
+void FileTest(void)
+{
+    FRESULT res;  /* API result code */
+	BYTE mm[50];
+	UINT i;
+	LOG_DEBUG("文件系统测试开始.");
+	res = f_mkfs("0:", FM_ANY, 0, work, sizeof work);
+	if (res) {
+		LOG_DEBUG("创建文件系统失败.");
+		
+		return;
+	} else {
+		LOG_DEBUG("创建文件系统成功.");
+	}
+	/* 挂载文件系统 */
+	res = f_mount(&fs, "0:", 0);
+	if (res)
+	{
+		LOG_DEBUG("文件系统挂载失败.");
+	}
+	else
+	{
+		LOG_DEBUG("文件系统挂载成功.");
+	}
+	/* Create a file as new */
+	res = f_open(&file, "0:/test.txt", FA_CREATE_NEW|FA_WRITE|FA_READ);
+	if (res)
+	{
+		LOG_DEBUG("打开文件失败.");
+	}
+	else
+	{
+		LOG_DEBUG("打开文件成功.");
+	}
+	res = f_write(&file, "Hello,World!", 12, &bw);
+	//uart_printf("res write:%d\r\n",res);
+	if (bw == 12)
+	{
+		LOG_DEBUG("写文件成功!");
+	}
+	else
+	{
+		LOG_DEBUG("写文件失败!");
+	}
+	res = f_size(&file);
+	LOG_DEBUG("文件大小:%d Bytes.",res);
+	memset(mm,0x0,50);
+	
+	//f_lseek(&file,0);
+	res = f_close(&file);
+	if (res) {
+		LOG_DEBUG("文件保存失败.");
+	} else {
+		LOG_DEBUG("文件保存成功.");
+	}
+	
+	res = f_open(&file, "0:/test.txt", FA_READ);
+	if (res) {
+		LOG_DEBUG("打开文件失败.");
+		return;
+	} else {
+		LOG_DEBUG("打开文件成功.");
+	}
+	res = f_read(&file,mm,12,&i);
+	if (res == FR_OK)
+	{
+		LOG_DEBUG("读文件成功!");
+		LOG_DEBUG("读到数据长度:%d Bytes.",i);
+	}
+	else
+	{
+		LOG_DEBUG("读文件失败!");
+		return;
+	}
+	LOG_DEBUG("读到如下数据:%s", mm);
+	//buff_print((char *)mm,12);
+	/* Close the file */
+	f_close(&file);
+	/*卸载文件系统*/
+	f_mount(0, "0:", 0);
+	LOG_DEBUG("文件系统测试完毕.");
+} 
 
 /* USER CODE END DECL */
 
@@ -81,8 +180,9 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
+	w25qxx_init(&flash1);
     Stat = STA_NOINIT;
-    return Stat;
+    return RES_OK;
   /* USER CODE END INIT */
 }
 
@@ -96,7 +196,7 @@ DSTATUS USER_status (
 )
 {
   /* USER CODE BEGIN STATUS */
-    Stat = STA_NOINIT;
+    Stat &= ~STA_NOINIT;
     return Stat;
   /* USER CODE END STATUS */
 }
@@ -117,7 +217,16 @@ DRESULT USER_read (
 )
 {
   /* USER CODE BEGIN READ */
-    return RES_OK;
+	W25Qxx_Status status = W25Qxx_OK;
+	UINT i;
+	for(i = 0;i < count;i++)
+	{
+		status = w25qxx_read_sector(&flash1, sector + i, buff + i * 4096, 4096);
+		if (status != W25Qxx_OK) {
+			break;
+		}
+	}
+    return status == W25Qxx_OK ? RES_OK : RES_ERROR;
   /* USER CODE END READ */
 }
 
@@ -139,7 +248,17 @@ DRESULT USER_write (
 {
   /* USER CODE BEGIN WRITE */
   /* USER CODE HERE */
-    return RES_OK;
+	W25Qxx_Status status = W25Qxx_OK;
+	UINT i;
+	for(i = 0;i < count;i++)
+	{
+		w25qxx_erase_sector(&flash1, sector + i);
+		status = w25qxx_write_sector(&flash1, sector + i, buff + i * 4096, 4096);
+		if (status != W25Qxx_OK) {
+			break;
+		}
+	}
+    return status == W25Qxx_OK ? RES_OK : RES_ERROR;
   /* USER CODE END WRITE */
 }
 #endif /* _USE_WRITE == 1 */
@@ -160,7 +279,37 @@ DRESULT USER_ioctl (
 {
   /* USER CODE BEGIN IOCTL */
     DRESULT res = RES_ERROR;
-    return res;
+	switch(cmd) {
+		case CTRL_SYNC:
+			break;
+		case GET_SECTOR_COUNT:
+			*(uint32_t *)(buff) = flash1.SectorCount;
+			break;
+		case GET_SECTOR_SIZE:
+			*(uint32_t *)(buff) = flash1.SectorSize;
+			break;
+		case GET_BLOCK_SIZE:
+			*(uint32_t *)(buff) = flash1.BlockSize;
+			break;
+		case CTRL_TRIM:
+			break;
+		case CTRL_POWER:
+			break;
+		case CTRL_LOCK:
+		case CTRL_EJECT:
+		case CTRL_FORMAT:
+		case MMC_GET_TYPE:
+		case MMC_GET_CSD:
+		case MMC_GET_CID:
+		case MMC_GET_OCR:
+		case MMC_GET_SDSTAT:
+		case ATA_GET_REV:
+		case ATA_GET_MODEL:
+		case ATA_GET_SN:
+		default:
+			break;
+	}
+    return RES_OK;
   /* USER CODE END IOCTL */
 }
 #endif /* _USE_IOCTL == 1 */

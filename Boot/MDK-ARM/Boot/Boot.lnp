@@ -32,6 +32,7 @@
 "boot\w25qxx_driver.o"
 "boot\bsp_flash.o"
 "boot\ring_buffer.o"
+"boot\log.o"
 "boot\boot.o"
 "boot\user_diskio.o"
 "boot\fatfs.o"

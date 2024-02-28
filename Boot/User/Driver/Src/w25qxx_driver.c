@@ -4,8 +4,8 @@
 
 #if USE_DEBUG
 
-#include "uni_shell.h"
-#include "cmsis_os.h"
+//#include "uni_shell.h"
+//#include "cmsis_os.h"
 
 #endif
 

@@ -1,6 +1,6 @@
 #include "version.h"
 
-#ifdef USE_APP_AREA1
+#if defined USE_APP_AREA1 && !defined NOBOOT
 
 __attribute__((at(0x08040000))) const Firmware_Version_Typedef firmware_info = {
 	.device_name = "STM32H7 OTA Demo",

@@ -31,6 +31,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "bsp_flash.h"
+#include "w25qxx_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,7 +53,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+W25Qxx flash1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,6 +86,8 @@ void Goto_APP2()
 	HAL_GPIO_DeInit(LED0_GPIO_Port, LED0_Pin);
 	boot_to(APP_AREA2_ADDRESS);
 }
+
+extern void FileTest(void);
 
 /* USER CODE END 0 */
 
@@ -142,7 +145,7 @@ int main(void)
 	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
 	memset(buffer, 0, sizeof(buffer));
 	
-	if (program_flag_is_enable()) {
+	/*if (program_flag_is_enable()) {
 		sprintf(buffer, "Enabled reprogram flag, goto app1");
 		HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);	
 		memset(buffer, 0, sizeof(buffer));
@@ -155,21 +158,26 @@ int main(void)
 		memset(buffer, 0, sizeof(buffer));
 		HAL_Delay(3000);
 		Goto_APP2();
-	}
+	}*/
+	
+	HAL_Delay(5000);
+	FileTest();
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (count < 10000) {
+	  /*if (count < 10000) {
 		HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
 	  }
 	  count++;
 	  HAL_UART_Transmit(&huart1, "Into Boot\r\n", 11, 10);
 	  if (count == 20) {
 		Goto_APP2();
-	  }
+	  }*/
+	  HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
 	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 

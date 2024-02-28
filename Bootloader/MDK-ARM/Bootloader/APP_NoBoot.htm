@@ -1,9 +1,9 @@
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html><head>
-<title>Static Call Graph - [Bootloader\APP_AREA1.axf]</title></head>
+<title>Static Call Graph - [Bootloader\APP_NoBoot.axf]</title></head>
 <body><HR>
-<H1>Static Call Graph for image Bootloader\APP_AREA1.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 28 22:33:59 2024
+<H1>Static Call Graph for image Bootloader\APP_NoBoot.axf</H1><HR>
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 28 23:07:39 2024
 <BR><P>
 <H3>Maximum Stack Usage =        572 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -4110,6 +4110,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_mkfs
 <LI><a href="#[2b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sync_fs
+<LI><a href="#[2a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;find_volume
 </UL>
 
 <P><STRONG><a name="[2ae]"></a>disk_read</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, diskio.o(i.disk_read))
@@ -4151,7 +4152,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FileTest
 </UL>
 
-<P><STRONG><a name="[167]"></a>f_mkfs</STRONG> (Thumb, 1350 bytes, Stack size 88 bytes, ff.o(i.f_mkfs))
+<P><STRONG><a name="[167]"></a>f_mkfs</STRONG> (Thumb, 1400 bytes, Stack size 88 bytes, ff.o(i.f_mkfs))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = f_mkfs &rArr; get_ldnumber
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_fattime
@@ -4180,7 +4181,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FileTest
 </UL>
 
-<P><STRONG><a name="[169]"></a>f_open</STRONG> (Thumb, 518 bytes, Stack size 96 bytes, ff.o(i.f_open))
+<P><STRONG><a name="[169]"></a>f_open</STRONG> (Thumb, 532 bytes, Stack size 96 bytes, ff.o(i.f_open))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_fattime
@@ -4204,7 +4205,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FileTest
 </UL>
 
-<P><STRONG><a name="[16d]"></a>f_read</STRONG> (Thumb, 372 bytes, Stack size 48 bytes, ff.o(i.f_read))
+<P><STRONG><a name="[16d]"></a>f_read</STRONG> (Thumb, 404 bytes, Stack size 48 bytes, ff.o(i.f_read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = f_read &rArr; validate &rArr; lock_fs &rArr; ff_req_grant &rArr; osSemaphoreAcquire &rArr; xQueueSemaphoreTake &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[29a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate
@@ -4235,7 +4236,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[16c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_close
 </UL>
 
-<P><STRONG><a name="[16a]"></a>f_write</STRONG> (Thumb, 430 bytes, Stack size 48 bytes, ff.o(i.f_write))
+<P><STRONG><a name="[16a]"></a>f_write</STRONG> (Thumb, 464 bytes, Stack size 48 bytes, ff.o(i.f_write))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = f_write &rArr; validate &rArr; lock_fs &rArr; ff_req_grant &rArr; osSemaphoreAcquire &rArr; xQueueSemaphoreTake &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[29a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate
@@ -5500,7 +5501,7 @@ Local Symbols
 <LI><a href="#[2a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;find_volume
 </UL>
 
-<P><STRONG><a name="[2af]"></a>clmt_clust</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, ff.o(i.clmt_clust))
+<P><STRONG><a name="[2af]"></a>clmt_clust</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, ff.o(i.clmt_clust))
 <BR><BR>[Called By]<UL><LI><a href="#[16a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_write
 <LI><a href="#[16d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_read
 </UL>
@@ -5545,7 +5546,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[2a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;follow_path
 </UL>
 
-<P><STRONG><a name="[294]"></a>dir_next</STRONG> (Thumb, 238 bytes, Stack size 32 bytes, ff.o(i.dir_next))
+<P><STRONG><a name="[294]"></a>dir_next</STRONG> (Thumb, 252 bytes, Stack size 32 bytes, ff.o(i.dir_next))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sync_window
@@ -5570,7 +5571,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[169]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
 </UL>
 
-<P><STRONG><a name="[293]"></a>dir_sdi</STRONG> (Thumb, 130 bytes, Stack size 24 bytes, ff.o(i.dir_sdi))
+<P><STRONG><a name="[293]"></a>dir_sdi</STRONG> (Thumb, 142 bytes, Stack size 24 bytes, ff.o(i.dir_sdi))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = dir_sdi &rArr; get_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[28d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_fat
@@ -5581,7 +5582,7 @@ Local Symbols
 <LI><a href="#[292]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dir_find
 </UL>
 
-<P><STRONG><a name="[2a7]"></a>find_volume</STRONG> (Thumb, 588 bytes, Stack size 40 bytes, ff.o(i.find_volume))
+<P><STRONG><a name="[2a7]"></a>find_volume</STRONG> (Thumb, 644 bytes, Stack size 40 bytes, ff.o(i.find_volume))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = find_volume &rArr; lock_fs &rArr; ff_req_grant &rArr; osSemaphoreAcquire &rArr; xQueueSemaphoreTake &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[27c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;move_window
@@ -5592,13 +5593,14 @@ Local Symbols
 <LI><a href="#[2a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clear_lock
 <LI><a href="#[27b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_fs
 <LI><a href="#[2b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_status
+<LI><a href="#[29f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_ioctl
 <LI><a href="#[29e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_initialize
 </UL>
 <BR>[Called By]<UL><LI><a href="#[169]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
 <LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_mount
 </UL>
 
-<P><STRONG><a name="[2a8]"></a>follow_path</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, ff.o(i.follow_path))
+<P><STRONG><a name="[2a8]"></a>follow_path</STRONG> (Thumb, 122 bytes, Stack size 24 bytes, ff.o(i.follow_path))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ld_clust
@@ -5609,7 +5611,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[169]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
 </UL>
 
-<P><STRONG><a name="[28d]"></a>get_fat</STRONG> (Thumb, 190 bytes, Stack size 24 bytes, ff.o(i.get_fat))
+<P><STRONG><a name="[28d]"></a>get_fat</STRONG> (Thumb, 232 bytes, Stack size 24 bytes, ff.o(i.get_fat))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = get_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[27c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;move_window
@@ -5703,7 +5705,7 @@ Local Symbols
 <LI><a href="#[27b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_fs
 </UL>
 
-<P><STRONG><a name="[28e]"></a>put_fat</STRONG> (Thumb, 234 bytes, Stack size 32 bytes, ff.o(i.put_fat))
+<P><STRONG><a name="[28e]"></a>put_fat</STRONG> (Thumb, 292 bytes, Stack size 32 bytes, ff.o(i.put_fat))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;st_word

@@ -279,7 +279,7 @@ DRESULT USER_write (
   
 	for(i = 0;i < count;i++)
 	{
-		//SHELL_DEBUG("writing sector:%d", sector + i);
+		//LOG_DEBUG("writing sector:%d", sector + i);
 		w25qxx_erase_sector(&flash1, sector + i);
 		w25qxx_write_sector(&flash1, sector + i, buff + i * 4096, 4096);
 	}

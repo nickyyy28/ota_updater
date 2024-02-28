@@ -44,34 +44,34 @@ compiling version.c...
   #endif
 ..\Core\Src\version.c: 2 warnings, 0 errors
 compiling system_stm32h7xx.c...
-compiling bsp_flash.c...
-..\User\Driver\Src\bsp_flash.c(37): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
-  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
-..\User\Driver\Src\bsp_flash.c(55): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
-  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
-..\User\Driver\Src\bsp_flash.c(72): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
-  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
-..\User\Driver\Src\bsp_flash.c(89): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
-  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
-..\User\Driver\Src\bsp_flash.c(97): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "const uint8_t *"
-  	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), 10);
-..\User\Driver\Src\bsp_flash.c(21): warning:  #177-D: variable "value"  was declared but never referenced
-  	uint32_t value = PROGRAM_FLAG_ENABLE;
-..\User\Driver\Src\bsp_flash.c(160): warning:  #1-D: last line of file ends without a newline
-  }
-..\User\Driver\Src\bsp_flash.c: 7 warnings, 0 errors
 compiling comTask.c...
 ..\User\Task\Src\comTask.c(48): warning:  #1-D: last line of file ends without a newline
   }
 ..\User\Task\Src\comTask.c: 1 warning, 0 errors
-compiling shellTask.c...
-../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
-  #endif
-../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
-  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
-..\User\Task\Src\shellTask.c(19): warning:  #188-D: enumerated type mixed with another type
-  W25Qxx flash1 = {0};
-..\User\Task\Src\shellTask.c: 3 warnings, 0 errors
+compiling w25qxx_driver.c...
+..\User\Driver\Src\w25qxx_driver.c(479): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\w25qxx_driver.c: 1 warning, 0 errors
+compiling user_diskio.c...
+../FATFS/Target/user_diskio.c(69): warning:  #870-D: invalid multibyte character sequence
+  	LOG_DEBUG("文件系统测试开�?.");
+../FATFS/Target/user_diskio.c(102): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("写文件成�?!");
+../FATFS/Target/user_diskio.c(106): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("写文件失�?!");
+../FATFS/Target/user_diskio.c(108): warning:  #188-D: enumerated type mixed with another type
+  	res = f_size(&file);
+../FATFS/Target/user_diskio.c(130): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("读文件成�?!");
+../FATFS/Target/user_diskio.c(135): warning:  #870-D: invalid multibyte character sequence
+  		LOG_DEBUG("读文件失�?!");
+../FATFS/Target/user_diskio.c(247): warning:  #940-D: missing return statement at end of non-void function "USER_read" 
+  }
+../FATFS/Target/user_diskio.c(236): warning:  #177-D: variable "res"  was declared but never referenced
+  	DRESULT res = RES_ERROR;
+../FATFS/Target/user_diskio.c(309): warning:  #177-D: variable "res"  was declared but never referenced
+      DRESULT res = RES_ERROR;
+../FATFS/Target/user_diskio.c: 9 warnings, 0 errors
 linking...
 Program Size: Code=65940 RO-data=2536 RW-data=968 ZI-data=41424  
 FromELF: creating hex file...
@@ -102,7 +102,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:10
+Build Time Elapsed:  00:00:16
 </pre>
 </body>
 </html>
