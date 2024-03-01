@@ -67,6 +67,7 @@
 "bootloader\soft_i2c.o"
 "bootloader\ring_buffer.o"
 "bootloader\iap.o"
+"bootloader\uni_shell_osal.o"
 "bootloader\shelltask.o"
 "bootloader\otatask.o"
 "bootloader\comtask.o"

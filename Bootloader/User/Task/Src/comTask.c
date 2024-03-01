@@ -38,11 +38,11 @@ void comTask(void *arg)
 			memcpy(tx_buffer, rx_buffer, sizeof(rx_buffer));
 			tx_reslut = FDCAN_transmit_msg(&hfdcan1, &txheader, tx_buffer);
 		}
-#ifdef USE_APP_AREA1
+#if defined USE_APP_AREA1 && !defined NOBOOT
 		HAL_UART_Transmit(&huart1, "Into APP1\r\n", 11, 10);
 #elif defined USE_APP_AREA2
 		HAL_UART_Transmit(&huart1, "Into APP2\r\n", 11, 10);
 #endif
-		osDelay(100);
+		osDelay(1);
 	}
 }

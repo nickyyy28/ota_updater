@@ -33,7 +33,7 @@
 
 #define RX_BUFFSIZE	128				//串口或USBCDC接收缓冲区大小, 但是USBCDC一般单次数据包最多64字节, 注意使用方式
 
-#define CURRSOR_BLINK		1		//光标是否闪烁
+#define CURRSOR_BLINK		0		//光标是否闪烁
 #define CURRSOR_BLINK_FRQ	3		//闪烁频率
 #define CONSOLE_COLOR_ENABLE 1 		//是否使用彩色日志信息
 #define CURRSOR_BLINK_TICK	(int)(1000 / CURRSOR_BLINK_FRQ * 2)
@@ -60,12 +60,21 @@
 
 #define SHELL_DELAY osDelay
 
+#define ASYNC_LOG	1
+
 #if CONSOLE_COLOR_ENABLE == 1
 
 //设置控制台字体颜色
 #define SET_CONSOLE_COLOR(__color__) SHELL_Transmit((uint8_t*)__color__, strlen(__color__))
 //恢复控制台字体颜色
 #define RESUME_CONSOLE_COLOR() SET_CONSOLE_COLOR(CONSOLE_COLOR_WHITE)
+
+#if ASYNC_LOG
+
+#define ASYNC_SET_CONSOLE_COLOR(__color__) ring_buffer_write(&async_log_buffer, (const uint8_t*)__color__, strlen(__color__))
+#define ASYNC_RESUME_CONSOLE_COLOR() ASYNC_SET_CONSOLE_COLOR(CONSOLE_COLOR_WHITE)
+
+#endif
 
 #else
 
@@ -82,6 +91,7 @@
 #if defined USE_USBCDC
 //终端发送函数
 #define SHELL_Transmit(src, len)	\
+	HAL_UART_Transmit(&huart1, src, len, 100); \
 	CDC_Transmit_Packet(src, len)
 #elif defined USE_USART || defined USE_UART
 

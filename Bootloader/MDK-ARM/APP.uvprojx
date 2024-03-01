@@ -1084,6 +1084,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Service\Src\iap.c</FilePath>
             </File>
+            <File>
+              <FileName>uni_shell_osal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Service\Src\uni_shell_osal.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2239,6 +2244,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Service\Src\iap.c</FilePath>
             </File>
+            <File>
+              <FileName>uni_shell_osal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Service\Src\uni_shell_osal.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3393,6 +3403,11 @@
               <FileName>iap.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Service\Src\iap.c</FilePath>
+            </File>
+            <File>
+              <FileName>uni_shell_osal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Service\Src\uni_shell_osal.c</FilePath>
             </File>
           </Files>
         </Group>

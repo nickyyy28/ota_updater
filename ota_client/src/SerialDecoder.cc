@@ -158,7 +158,9 @@ void SerialDecoder::readData()
     m_recv.append(m_port->readAll());
     pre_size = size() - pre_size;
     qDebug() << "receive " << pre_size << " bytes data";
-    post();
+    if (pre_size > 0) {
+        post();
+    }
 }
 
 void SerialDecoder::testPost()

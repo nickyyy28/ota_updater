@@ -4,11 +4,21 @@
 #include "usart.h"
 #include <cmsis_os.h>
 #include "queue.h"
+#include "uni_shell.h"
+#include "ring_buffer.h"
+
 
 #ifdef USE_CACHE
 __attribute__((section(".RW_IRAM2"))) __attribute__((aligned(32)))  uint8_t usart_rx_buffer[RX_BUFFSIZE] = {0};
 #else
 __attribute__((aligned(32))) uint8_t usart_rx_buffer[RX_BUFFSIZE] = {0};
+#endif
+
+#if ASYNC_LOG
+
+static RingBuffer async_log_buffer = {0};
+static uint8_t async_buffer[128] = {0};
+
 #endif
 
 QueueHandle_t log_mutex;
@@ -468,9 +478,30 @@ void shell_exec(void)
 			memset(shell_rx_buffer, 0, rx_len);
 			//HAL_NVIC_EnableIRQ(USART1_IRQn);
 		} else {
-#if CURRSOR_BLINK
+#if ASYNC_LOG
+			uint32_t len = async_log_buffer.size;
+			if (len > 0 && (free_ticks == 0 || free_ticks == CURRSOR_BLINK_TICK / 2)) {
+				for(uint32_t index = 0 ; index < len ; index += sizeof(async_buffer)) {
+					uint32_t copy_len = 0;
+					if (len - index >= sizeof(async_buffer)) {
+						ring_buffer_read(&async_log_buffer, async_buffer, sizeof(async_buffer));
+						copy_len = sizeof(async_buffer);
+					}  else {
+						ring_buffer_read(&async_log_buffer, async_buffer, len - index);
+						copy_len = len - index;
+					}
+					SHELL_Transmit(async_buffer, copy_len);
+				}
+				RESUME_CONSOLE_COLOR();
+				SHELL_Transmit((uint8_t *)"\r\n>", 3);
+				
+			}
+#endif
 			free_ticks++;
 			free_ticks %= CURRSOR_BLINK_TICK;
+#if CURRSOR_BLINK
+			
+
 			if (free_ticks == 0) {
 				SHELL_Transmit((uint8_t *)"\033[?25l", 8);
 			} else if (free_ticks == CURRSOR_BLINK_TICK / 2) {
@@ -537,6 +568,10 @@ void shell_init(void)
 	/*while (hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) {
 		SHELL_DELAY(1);
 	}*/
+#if ASYNC_LOG
+	ring_buffer_init(&async_log_buffer);
+	current_as_shell_thread();
+#endif
 	SHELL_DELAY(2000);
 	cmd_logo(NULL);
 	SHELL_DELAY(1000);
@@ -577,10 +612,22 @@ void SHELL_LOG_LEVEL(_LOG_LEVEL level, const char* fmt, ...)
 	seconds = cur_tick / 1000;
 	sprintf(log_buffer, "\r\n[%02u:%02u:%02u][%s]: %s", hours, minutes, seconds, level_str, raw_buffer);
     
-    va_end(args);
+    va_end(args);	
+#if ASYNC_LOG
+	if (is_shell_thread()) {
+		SET_CONSOLE_COLOR(log_level_color[level - 1]);
+		SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
+		RESUME_CONSOLE_COLOR();
+	} else {
+		ASYNC_SET_CONSOLE_COLOR(log_level_color[level - 1]);
+		ring_buffer_write(&async_log_buffer, (const uint8_t *)log_buffer, strlen(log_buffer));
+		ASYNC_RESUME_CONSOLE_COLOR();
+	}
+#else	
 	SET_CONSOLE_COLOR(log_level_color[level - 1]);
 	SHELL_Transmit((uint8_t*)log_buffer, strlen(log_buffer));
 	RESUME_CONSOLE_COLOR();
+#endif
 	_mutex = 0;
 }
 

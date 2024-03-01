@@ -54,4 +54,5 @@ inline uint32_t ring_buffer_size(RingBuffer *buffer);
  */
 uint8_t ring_buffer_view_data(RingBuffer *buffer, uint8_t *dst, uint32_t len);
 
+
 #endif

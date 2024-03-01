@@ -22,7 +22,7 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\APP.uvprojx
-Project File Date:  02/28/2024
+Project File Date:  02/29/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
@@ -37,15 +37,132 @@ remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\version.crf
 remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\comTask.o
 remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\comTask.d
 remove D:\USER\Desktop\ota_updater\Bootloader\MDK-ARM\Bootloader\comTask.crf
+compiling ring_buffer.c...
+..\User\Service\Src\ring_buffer.c(43): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "int"
+          memchr(dst + temp, &buffer->buffer[0], len - temp);
+..\User\Service\Src\ring_buffer.c: 1 warning, 0 errors
+compiling uni_shell_osal.c...
+..\User\Service\Src\uni_shell_osal.c(37): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Service\Src\uni_shell_osal.c: 1 warning, 0 errors
 compiling version.c...
-../Core/Inc/version.h(23): warning:  #1-D: last line of file ends without a newline
-  }Firmware_Version_Typedef;
 ..\Core\Src\version.c(17): warning:  #1-D: last line of file ends without a newline
   #endif
-..\Core\Src\version.c: 2 warnings, 0 errors
-compiling diskio.c...
-compiling syscall.c...
-compiling ff_gen_drv.c...
+..\Core\Src\version.c: 1 warning, 0 errors
+compiling eeprom_at24c256.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\User\Driver\Src\eeprom_at24c256.c(12): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(17): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(23): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(28): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(33): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c(38): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "i"  (declared at line 40)
+  		goto end;
+  		^
+..\User\Driver\Src\eeprom_at24c256.c: 7 warnings, 0 errors
+compiling oled_ssd1306_1_3.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\User\Driver\Src\oled_ssd1306_1_3.c(238): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\oled_ssd1306_1_3.c: 2 warnings, 0 errors
+compiling system_stm32h7xx.c...
+compiling stm32h7xx_it.c...
+compiling freertos.c...
+../User/Task/Inc/otaTask.h(8): warning:  #1-D: last line of file ends without a newline
+  #endif // !__OTA_TASK_H
+../Core/Src/freertos.c: 1 warning, 0 errors
+compiling comTask.c...
+..\User\Task\Src\comTask.c(48): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Task\Src\comTask.c: 1 warning, 0 errors
+compiling w25qxx_driver.c...
+..\User\Driver\Src\w25qxx_driver.c(479): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Driver\Src\w25qxx_driver.c: 1 warning, 0 errors
+compiling otaTask.c...
+../User/Task/Inc/otaTask.h(8): warning:  #1-D: last line of file ends without a newline
+  #endif // !__OTA_TASK_H
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+../User/Service/Inc/iap.h(41): warning:  #1295-D: Deprecated declaration SendRequestKeepAlive - give arg types
+  uint8_t SendRequestKeepAlive();
+../User/Service/Inc/iap.h(42): warning:  #1295-D: Deprecated declaration SendRequestNewFirmwareInfo - give arg types
+  uint8_t SendRequestNewFirmwareInfo();
+../User/Service/Inc/iap.h(45): warning:  #1295-D: Deprecated declaration SendRequestNowUTCTime - give arg types
+  uint8_t SendRequestNowUTCTime();
+../User/Service/Inc/iap.h(52): warning:  #1-D: last line of file ends without a newline
+  #endif //__IAP_H
+..\User\Task\Src\otaTask.c(32): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Task\Src\otaTask.c: 7 warnings, 0 errors
+compiling uni_shell.c...
+..\User\Service\Src\uni_shell.c(177): warning:  #546-D: transfer of control bypasses initialization of:
+            variable "status"  (declared at line 187)
+            variable "key"  (declared at line 188)
+            variable "value"  (declared at line 189)
+            variable "tmp_index"  (declared at line 190)
+            variable "param"  (declared at line 191)
+  		goto err;
+  		^
+..\User\Service\Src\uni_shell.c(573): warning:  #223-D: function "current_as_shell_thread" declared implicitly
+  	current_as_shell_thread();
+..\User\Service\Src\uni_shell.c(617): warning:  #223-D: function "is_shell_thread" declared implicitly
+  	if (is_shell_thread()) {
+..\User\Service\Src\uni_shell.c(680): warning:  #223-D: function "CDC_Transmit_FS" declared implicitly
+  			CDC_Transmit_FS(src + i, USBCDC_MAX_PACKET_SIZE);
+..\User\Service\Src\uni_shell.c(682): warning:  #223-D: function "CDC_Transmit_FS" declared implicitly
+  			CDC_Transmit_FS(src + i, len - i);
+..\User\Service\Src\uni_shell.c: 5 warnings, 0 errors
+compiling iap.c...
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+../User/Service/Inc/iap.h(41): warning:  #1295-D: Deprecated declaration SendRequestKeepAlive - give arg types
+  uint8_t SendRequestKeepAlive();
+../User/Service/Inc/iap.h(42): warning:  #1295-D: Deprecated declaration SendRequestNewFirmwareInfo - give arg types
+  uint8_t SendRequestNewFirmwareInfo();
+../User/Service/Inc/iap.h(45): warning:  #1295-D: Deprecated declaration SendRequestNowUTCTime - give arg types
+  uint8_t SendRequestNowUTCTime();
+../User/Service/Inc/iap.h(52): warning:  #1-D: last line of file ends without a newline
+  #endif //__IAP_H
+..\User\Service\Src\iap.c(160): warning:  #1278-D: excess initializers are ignored
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c(160): warning:  #1278-D: excess initializers are ignored
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c(193): warning:  #1-D: last line of file ends without a newline
+  }
+..\User\Service\Src\iap.c(135): warning:  #177-D: function "RecvResponseKeepAlive"  was declared but never referenced
+  static uint8_t RecvResponseKeepAlive(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(140): warning:  #177-D: function "RecvResponseNewFirmwareInfo"  was declared but never referenced
+  static uint8_t RecvResponseNewFirmwareInfo(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(145): warning:  #177-D: function "RecvResponseTheNPacket"  was declared but never referenced
+  static uint8_t RecvResponseTheNPacket(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(150): warning:  #177-D: function "RecvResponseNowUTCTime"  was declared but never referenced
+  static uint8_t RecvResponseNowUTCTime(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(155): warning:  #177-D: function "RecvRequestOldFirmwareInfo"  was declared but never referenced
+  static uint8_t RecvRequestOldFirmwareInfo(uint32_t msg_id, PacketBuffer* buffer)
+..\User\Service\Src\iap.c(160): warning:  #177-D: variable "recv"  was declared but never referenced
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c(160): warning:  #177-D: variable "send"  was declared but never referenced
+  static PacketBuffer recv = {0}, send = {0};
+..\User\Service\Src\iap.c: 15 warnings, 0 errors
 compiling user_diskio.c...
 ../FATFS/Target/user_diskio.c(69): warning:  #870-D: invalid multibyte character sequence
   	LOG_DEBUG("文件系统测试开�?.");
@@ -66,18 +183,19 @@ compiling user_diskio.c...
 ../FATFS/Target/user_diskio.c(309): warning:  #177-D: variable "res"  was declared but never referenced
       DRESULT res = RES_ERROR;
 ../FATFS/Target/user_diskio.c: 9 warnings, 0 errors
-compiling comTask.c...
-..\User\Task\Src\comTask.c(48): warning:  #1-D: last line of file ends without a newline
-  }
-..\User\Task\Src\comTask.c: 1 warning, 0 errors
-compiling system_stm32h7xx.c...
-compiling ff.c...
-compiling fatfs.c...
-compiling main.c...
+compiling shellTask.c...
+../User/Service/Inc/soft_i2c.h(23): warning:  #1-D: last line of file ends without a newline
+  #endif
+../../ota_client/include/packet/Device2Client.h(89): warning:  #1-D: last line of file ends without a newline
+  #endif //OTA_DEVICE_2_CLIENT_PACKET_H
+..\User\Task\Src\shellTask.c(19): warning:  #188-D: enumerated type mixed with another type
+  W25Qxx flash1 = {0};
+..\User\Task\Src\shellTask.c: 3 warnings, 0 errors
+compiling w25qxx_4M.c...
 linking...
-Program Size: Code=74016 RO-data=2624 RW-data=976 ZI-data=53784  
+Program Size: Code=74780 RO-data=2624 RW-data=980 ZI-data=54948  
 FromELF: creating hex file...
-"Bootloader\APP_NoBoot.axf" - 0 Error(s), 12 Warning(s).
+"Bootloader\APP_NoBoot.axf" - 0 Error(s), 54 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -101,7 +219,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:41
+Build Time Elapsed:  00:00:34
 </pre>
 </body>
 </html>
